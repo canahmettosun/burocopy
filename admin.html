@@ -8,159 +8,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAYgBx5T_7aS6IeV3f-T6KVjzZg6V5kRY0",
-  authDomain: "buro-copy-fiyat-listesi.firebaseapp.com",
-  projectId: "buro-copy-fiyat-listesi",
-  storageBucket: "buro-copy-fiyat-listesi.firebasestorage.app",
-  messagingSenderId: "969205548894",
-  appId: "1:969205548894:web:7ff904261fb355e85771cf"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-window.saveProduct = async function () {
-  const code = document.getElementById("code").value;
-  const name = document.getElementById("name").value;
-  const unit = document.getElementById("unit").value;
-
-  // Form doğrulama
-  if (!code || !name || !unit) {
-    showNotification("Lütfen tüm zorunlu alanları doldurun!", "error");
-    return;
-  }
-
-  const tiers = [];
-  const tierElements = document.querySelectorAll(".tier");
-  
-  // En az bir kademe olmalı
-  if (tierElements.length === 0) {
-    showNotification("En az bir fiyat kademesi ekleyin!", "error");
-    return;
-  }
-  
-  let isValid = true;
-  
-  tierElements.forEach((row, index) => {
-    const min = Number(row.querySelector(".min").value);
-    const price = Number(row.querySelector(".price").value);
-    
-    if (min && price) {
-      // Kademelerin sıralı olduğundan emin ol
-      if (index > 0) {
-        const prevMin = Number(tierElements[index-1].querySelector(".min").value);
-        if (min <= prevMin) {
-          showNotification(`Kademe ${index+1}: Min değer önceki kademeden büyük olmalı!`, "error");
-          isValid = false;
-        }
-      }
-      tiers.push({ min, price });
-    } else {
-      showNotification(`Kademe ${index+1}: Min ve Fiyat alanları doldurulmalı!`, "error");
-      isValid = false;
-    }
-  });
-  
-  if (!isValid) return;
-
-  try {
-    await setDoc(doc(db, "products", code), {
-      name,
-      unit,
-      tiers,
-      lastUpdated: new Date().toISOString()
-    });
-    
-    showNotification("Ürün başarıyla kaydedildi!", "success");
-    
-    // Formu temizle
-    document.getElementById("code").value = "";
-    document.getElementById("name").value = "";
-    document.getElementById("unit").value = "adet";
-    document.getElementById("tiers").innerHTML = "";
-    
-    // Başlangıç kademesini ekle
-    addTier();
-    
-  } catch (error) {
-    console.error("Kaydetme hatası:", error);
-    showNotification("Kayıt sırasında bir hata oluştu!", "error");
-  }
-};
-
-window.addTier = function () {
-  const div = document.createElement("div");
-  div.className = "tier";
-  div.innerHTML = `
-    <div class="tier-header">
-      <span class="tier-number">Kademe ${document.querySelectorAll(".tier").length + 1}</span>
-      <button type="button" class="btn-remove-tier" onclick="removeTier(this)">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="tier-inputs">
-      <div class="input-group">
-        <label for="min_${Date.now()}"><i class="fas fa-layer-group"></i> Min. Adet:</label>
-        <input class="min" type="number" min="1" id="min_${Date.now()}" placeholder="Minimum miktar" required>
-      </div>
-      <div class="input-group">
-        <label for="price_${Date.now()}"><i class="fas fa-tag"></i> Fiyat (₺):</label>
-        <input class="price" type="number" step="0.01" min="0.01" id="price_${Date.now()}" placeholder="Birim fiyat" required>
-      </div>
-    </div>
-  `;
-  document.getElementById("tiers").appendChild(div);
-  
-  // Kademe numaralarını güncelle
-  updateTierNumbers();
-};
-
-window.removeTier = function (button) {
-  const tier = button.closest(".tier");
-  tier.remove();
-  updateTierNumbers();
-};
-
-function updateTierNumbers() {
-  document.querySelectorAll(".tier").forEach((tier, index) => {
-    tier.querySelector(".tier-number").textContent = `Kademe ${index + 1}`;
-  });
-}
-
-function showNotification(message, type) {
-  // Mevcut bildirimleri temizle
-  const existingNotifications = document.querySelectorAll(".notification");
-  existingNotifications.forEach(notification => {
-    notification.remove();
-  });
-  
-  const notification = document.createElement("div");
-  notification.className = `notification notification-${type}`;
-  notification.innerHTML = `
-    <div class="notification-content">
-      <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-      <span>${message}</span>
-    </div>
-    <button class="notification-close" onclick="this.parentElement.remove()">
-      <i class="fas fa-times"></i>
-    </button>
-  `;
-  
-  document.body.appendChild(notification);
-  
-  // 5 saniye sonra bildirimi kaldır
-  setTimeout(() => {
-    if (notification.parentNode) {
-      notification.remove();
-    }
-  }, 5000);
-}
-</script>
 <style>
 /* Genel Stiller */
 :root {
@@ -192,12 +39,116 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
 }
 
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
+/* Login Ekranı */
+.login-container {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.login-logo {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.login-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.login-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.btn-login {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-login:hover {
+  background-color: var(--primary-dark);
+}
+
+.login-error {
+  color: var(--error-color);
+  margin-top: 15px;
+  font-size: 14px;
+  display: none;
+}
+
+/* Admin Panel Container (Gizli Başlangıçta) */
+.admin-container {
+  display: none;
+  width: 100%;
+  max-width: 1200px;
 }
 
 /* Başlık */
@@ -421,6 +372,16 @@ body {
   transform: translateY(-2px);
 }
 
+.btn-logout {
+  background-color: rgba(231, 76, 60, 0.2);
+  color: var(--error-color);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.btn-logout:hover {
+  background-color: rgba(231, 76, 60, 0.3);
+}
+
 /* Bildirim */
 .notification {
   position: fixed;
@@ -546,11 +507,319 @@ body {
     gap: 15px;
     align-items: center;
   }
+  
+  .login-container {
+    padding: 30px 20px;
+  }
 }
 </style>
+
+<!-- 🔐 GÜVENLİ ŞİFRE KORUMASI - HER ZAMAN ŞİFRE SORAR -->
+<script>
+// Sabit şifre (değiştirebilirsin)
+const ADMIN_PASSWORD = "1234";
+
+// Sayfa yüklendiğinde kontrol et
+document.addEventListener('DOMContentLoaded', function() {
+  // Eski localStorage'ı temizle (geriye dönük uyumluluk için)
+  localStorage.removeItem("adminAuth");
+  
+  // Her zaman login ekranını göster
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('admin-container').style.display = 'none';
+  
+  // Şifre giriş alanına odaklan
+  document.getElementById('admin-password').focus();
+});
+
+// Giriş yap butonu
+window.login = function() {
+  const passwordInput = document.getElementById('admin-password');
+  const errorElement = document.getElementById('login-error');
+  
+  // Şifreyi temizle
+  errorElement.style.display = 'none';
+  errorElement.textContent = '';
+  
+  if (!passwordInput.value) {
+    errorElement.textContent = "Lütfen şifreyi girin!";
+    errorElement.style.display = 'block';
+    passwordInput.focus();
+    return;
+  }
+  
+  if (passwordInput.value === ADMIN_PASSWORD) {
+    // Sadece sessionStorage kullan, localStorage kullanma
+    sessionStorage.setItem("adminAuth", "true");
+    
+    // Başarılı giriş
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-container').style.display = 'block';
+    showNotification("Başarıyla giriş yapıldı!", "success");
+    
+    // İlk kademeyi ekle
+    if (typeof addTier === 'function') {
+      addTier();
+    }
+  } else {
+    errorElement.textContent = "Hatalı şifre! Lütfen tekrar deneyin.";
+    errorElement.style.display = 'block';
+    passwordInput.value = '';
+    passwordInput.focus();
+    
+    // 3 kez yanlış girince uyarı
+    let wrongAttempts = sessionStorage.getItem("wrongAttempts") || 0;
+    wrongAttempts++;
+    sessionStorage.setItem("wrongAttempts", wrongAttempts);
+    
+    if (wrongAttempts >= 3) {
+      errorElement.textContent = "3 kez yanlış şifre girdiniz. Lütfen dikkatli olun!";
+    }
+  }
+};
+
+// Çıkış yap butonu
+window.logout = function() {
+  // Tüm oturum verilerini temizle
+  sessionStorage.removeItem("adminAuth");
+  sessionStorage.removeItem("wrongAttempts");
+  
+  // Login ekranına dön
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('admin-container').style.display = 'none';
+  
+  // Formu temizle
+  document.getElementById('admin-password').value = '';
+  document.getElementById('login-error').style.display = 'none';
+  
+  // Şifre alanına odaklan
+  document.getElementById('admin-password').focus();
+  
+  showNotification("Başarıyla çıkış yapıldı!", "success");
+};
+
+// Enter tuşu ile giriş
+document.getElementById('admin-password').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    login();
+  }
+});
+
+// Bildirim fonksiyonu
+function showNotification(message, type) {
+  // Mevcut bildirimleri temizle
+  const existingNotifications = document.querySelectorAll(".notification");
+  existingNotifications.forEach(notification => {
+    notification.remove();
+  });
+  
+  const notification = document.createElement("div");
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+      <span>${message}</span>
+    </div>
+    <button class="notification-close" onclick="this.parentElement.remove()">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // 5 saniye sonra bildirimi kaldır
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.remove();
+    }
+  }, 5000);
+}
+
+// Sayfa kapatıldığında sessionStorage'ı temizle
+window.addEventListener('beforeunload', function() {
+  sessionStorage.removeItem("adminAuth");
+});
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* 🔥 FIREBASE CONFIG (SENİN PROJEN) */
+const firebaseConfig = {
+  apiKey: "AIzaSyAYgBx5T_7aS6IeV3f-T6KVjzZg6V5kRY0",
+  authDomain: "buro-copy-fiyat-listesi.firebaseapp.com",
+  projectId: "buro-copy-fiyat-listesi",
+  storageBucket: "buro-copy-fiyat-listesi.firebasestorage.app",
+  messagingSenderId: "969205548894",
+  appId: "1:969205548894:web:7ff904261fb355e85771cf"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.addTier = function () {
+  // Önce giriş kontrolü yap
+  if (sessionStorage.getItem("adminAuth") !== "true") {
+    showNotification("Önce giriş yapmalısınız!", "error");
+    return;
+  }
+  
+  const div = document.createElement("div");
+  div.className = "tier";
+  div.innerHTML = `
+    <div class="tier-header">
+      <span class="tier-number">Kademe ${document.querySelectorAll(".tier").length + 1}</span>
+      <button type="button" class="btn-remove-tier" onclick="removeTier(this)">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="tier-inputs">
+      <div class="input-group">
+        <label for="min_${Date.now()}"><i class="fas fa-layer-group"></i> Min. Adet:</label>
+        <input class="min" type="number" min="1" id="min_${Date.now()}" placeholder="Minimum miktar" required>
+      </div>
+      <div class="input-group">
+        <label for="price_${Date.now()}"><i class="fas fa-tag"></i> Fiyat (₺):</label>
+        <input class="price" type="number" step="0.01" min="0.01" id="price_${Date.now()}" placeholder="Birim fiyat" required>
+      </div>
+    </div>
+  `;
+  document.getElementById("tiers").appendChild(div);
+  
+  // Kademe numaralarını güncelle
+  updateTierNumbers();
+};
+
+window.removeTier = function (button) {
+  // Önce giriş kontrolü yap
+  if (sessionStorage.getItem("adminAuth") !== "true") {
+    showNotification("Önce giriş yapmalısınız!", "error");
+    return;
+  }
+  
+  const tier = button.closest(".tier");
+  tier.remove();
+  updateTierNumbers();
+};
+
+function updateTierNumbers() {
+  document.querySelectorAll(".tier").forEach((tier, index) => {
+    tier.querySelector(".tier-number").textContent = `Kademe ${index + 1}`;
+  });
+}
+
+window.saveProduct = async function () {
+  // Önce giriş kontrolü yap
+  if (sessionStorage.getItem("adminAuth") !== "true") {
+    showNotification("Önce giriş yapmalısınız!", "error");
+    return;
+  }
+  
+  const code = document.getElementById("code").value;
+  const name = document.getElementById("name").value;
+  const unit = document.getElementById("unit").value;
+
+  // Form doğrulama
+  if (!code || !name || !unit) {
+    showNotification("Lütfen tüm zorunlu alanları doldurun!", "error");
+    return;
+  }
+
+  const tiers = [];
+  const tierElements = document.querySelectorAll(".tier");
+  
+  // En az bir kademe olmalı
+  if (tierElements.length === 0) {
+    showNotification("En az bir fiyat kademesi ekleyin!", "error");
+    return;
+  }
+  
+  let isValid = true;
+  
+  tierElements.forEach((row, index) => {
+    const min = Number(row.querySelector(".min").value);
+    const price = Number(row.querySelector(".price").value);
+    
+    if (min && price) {
+      // Kademelerin sıralı olduğundan emin ol
+      if (index > 0) {
+        const prevMin = Number(tierElements[index-1].querySelector(".min").value);
+        if (min <= prevMin) {
+          showNotification(`Kademe ${index+1}: Min değer önceki kademeden büyük olmalı!`, "error");
+          isValid = false;
+        }
+      }
+      tiers.push({ min, price });
+    } else {
+      showNotification(`Kademe ${index+1}: Min ve Fiyat alanları doldurulmalı!`, "error");
+      isValid = false;
+    }
+  });
+  
+  if (!isValid) return;
+
+  try {
+    await setDoc(doc(db, "products", code), {
+      name,
+      unit,
+      tiers,
+      lastUpdated: new Date().toISOString()
+    });
+    
+    showNotification("Ürün başarıyla kaydedildi!", "success");
+    
+    // Formu temizle
+    document.getElementById("code").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("unit").value = "adet";
+    document.getElementById("tiers").innerHTML = "";
+    
+    // Başlangıç kademesini ekle
+    addTier();
+    
+  } catch (error) {
+    console.error("Kaydetme hatası:", error);
+    showNotification("Kayıt sırasında bir hata oluştu!", "error");
+  }
+};
+</script>
 </head>
 <body>
-<div class="container">
+
+<!-- 🔐 GİRİŞ EKRANI - HER ZAMAN GÖSTERİLİR -->
+<div id="login-screen" class="login-container">
+  <div class="login-logo">
+    <i class="fas fa-lock"></i> BÜRO COPY
+  </div>
+  
+  <h2 class="login-title">Yönetim Paneli Girişi</h2>
+  <p class="login-subtitle">Lütfen admin şifresini giriniz</p>
+  
+  <div class="login-form">
+    <div class="form-group">
+      <label for="admin-password">Admin Şifresi</label>
+      <input type="password" id="admin-password" placeholder="Şifrenizi giriniz">
+    </div>
+    
+    <button class="btn-login" onclick="login()">
+      <i class="fas fa-sign-in-alt"></i> Giriş Yap
+    </button>
+    
+    <div id="login-error" class="login-error">
+      <!-- Hata mesajı buraya gelecek -->
+    </div>
+  </div>
+  
+  <div class="footer" style="margin-top: 30px; border: none; padding-top: 0;">
+    <div style="font-size: 12px; color: #666;">
+      <i class="fas fa-info-circle"></i> Varsayılan şifre: 1234
+    </div>
+  </div>
+</div>
+
+<!-- 🛠️ YÖNETİM PANELİ (Sadece şifre girilince görünecek) -->
+<div id="admin-container" class="admin-container">
   <!-- Başlık -->
   <div class="header">
     <div>
@@ -603,6 +872,9 @@ body {
       <button class="btn btn-success" onclick="saveProduct()">
         <i class="fas fa-save"></i> Ürünü Kaydet
       </button>
+      <button class="btn btn-logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+      </button>
     </div>
   </div>
   
@@ -620,11 +892,5 @@ body {
   </div>
 </div>
 
-<script>
-// Sayfa yüklendiğinde bir kademe ekle
-document.addEventListener('DOMContentLoaded', function() {
-  addTier();
-});
-</script>
 </body>
 </html>
