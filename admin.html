@@ -156,7 +156,7 @@ body::before {
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* DÜZELTME: SELECT ELEMENTİ İÇİN ÖZEL STİLLER */
+/* SELECT STİLLERİ */
 select.glass-input {
   appearance: none;
   -webkit-appearance: none;
@@ -169,7 +169,6 @@ select.glass-input {
   cursor: pointer;
 }
 
-/* DÜZELTME: SELECT OPTION STİLLERİ */
 select.glass-input option {
   background-color: #0f172a !important;
   color: var(--text-primary) !important;
@@ -180,35 +179,9 @@ select.glass-input option {
 
 select.glass-input option:hover,
 select.glass-input option:focus,
-select.glass-input option:checked,
-select.glass-input option:active {
+select.glass-input option:checked {
   background-color: var(--primary) !important;
   color: white !important;
-}
-
-/* Firefox için select düzeltmesi */
-@-moz-document url-prefix() {
-  select.glass-input {
-    color: var(--text-primary) !important;
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    text-shadow: 0 0 0 var(--text-primary);
-  }
-  
-  select.glass-input option {
-    background-color: #0f172a !important;
-  }
-}
-
-/* Chrome, Safari için */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  select.glass-input {
-    color: var(--text-primary);
-  }
-  
-  select.glass-input option {
-    background-color: #0f172a;
-    color: var(--text-primary);
-  }
 }
 
 .glass-btn {
@@ -393,7 +366,7 @@ select.glass-input option:active {
   }
 }
 
-/* Kademe Yönetimi - DÜZELTME: ETİKET VE PLACEHOLDER KARIŞMASINI ÖNLE */
+/* Kademe Yönetimi */
 .tiers-container {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 12px;
@@ -417,7 +390,6 @@ select.glass-input option:active {
   align-items: end;
 }
 
-/* DÜZELTME: Etiketleri daha belirgin yap */
 .tier-input-group {
   position: relative;
 }
@@ -425,8 +397,8 @@ select.glass-input option:active {
 .tier-input-group label {
   display: block;
   margin-bottom: 8px;
-  color: var(--text-primary) !important; /* Beyaz yaptık */
-  font-size: 13px !important; /* Daha küçük */
+  color: var(--text-primary) !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
@@ -474,7 +446,7 @@ select.glass-input option:active {
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 8px; /* Input ile hizalamak için */
+  margin-bottom: 8px;
 }
 
 .remove-tier-btn:hover {
@@ -535,6 +507,105 @@ select.glass-input option:active {
   transform: translateY(-2px);
 }
 
+.btn-edit {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  color: var(--accent);
+}
+
+.btn-edit:hover {
+  background: rgba(245, 158, 11, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-delete {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+}
+
+.btn-delete:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Ürün Listesi Tablosu */
+.products-table-container {
+  overflow-x: auto;
+  margin-top: 24px;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.products-table th {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 13px;
+}
+
+.products-table td {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.products-table tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.product-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.action-btn-sm {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  gap: 16px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Notification */
 .notification {
   position: fixed;
@@ -573,6 +644,10 @@ select.glass-input option:active {
   border-left: 4px solid var(--danger);
 }
 
+.notification-warning {
+  border-left: 4px solid var(--accent);
+}
+
 .notification-content {
   flex: 1;
 }
@@ -591,10 +666,6 @@ select.glass-input option:active {
 }
 
 /* Info Panel */
-.info-panel {
-  grid-column: span 2;
-}
-
 .info-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -631,69 +702,130 @@ select.glass-input option:active {
 }
 
 .info-card p {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+  color: var(--primary);
+  background: rgba(124, 58, 237, 0.1);
+  border-bottom: 2px solid var(--primary);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tier-grid {
+    grid-template-columns: 1fr;
+  }
+  
   .admin-header {
     flex-direction: column;
-    gap: 16px;
-    text-align: center;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .notification {
+    left: 20px;
+    right: 20px;
+    min-width: auto;
+    max-width: 100%;
+  }
+  
+  .buttons-container {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .footer {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .login-container {
+    padding: 30px 20px;
   }
   
   .info-grid {
     grid-template-columns: 1fr;
   }
   
-  .action-buttons {
+  .product-actions {
     flex-direction: column;
   }
   
-  .glass-card {
-    padding: 32px 24px;
-    margin: 20px;
+  .tabs {
+    flex-direction: column;
   }
   
-  .tier-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .tab-btn {
+    border-radius: 8px;
+    margin-bottom: 4px;
   }
-  
-  .remove-tier-btn {
-    width: 100%;
-    height: 44px;
-    margin-bottom: 0;
-  }
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-light);
-}
-
-/* DÜZELTME: Tarayıcı uyumluluk */
-select:focus option:checked {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light)) !important;
-  color: white !important;
 }
 </style>
 
@@ -728,6 +860,7 @@ window.login = function() {
     document.getElementById('admin-container').style.display = 'block';
     showNotification("Başarıyla giriş yapıldı!", "success");
     addTier();
+    loadProducts();
   } else {
     errorElement.textContent = "Hatalı şifre! Lütfen tekrar deneyin.";
     errorElement.style.display = 'block';
@@ -757,7 +890,7 @@ function showNotification(message, type) {
   const notification = document.createElement("div");
   notification.className = `notification notification-${type}`;
   notification.innerHTML = `
-    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
     <div class="notification-content">${message}</div>
     <button class="notification-close" onclick="this.parentElement.remove()">
       <i class="fas fa-times"></i>
@@ -770,12 +903,72 @@ function showNotification(message, type) {
     if (notification.parentNode) notification.remove();
   }, 5000);
 }
+
+// Tab değiştirme
+function switchTab(tabName) {
+  // Tüm tab butonlarından active class'ını kaldır
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Tüm tab içeriklerini gizle
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  
+  // Aktif tab butonuna active class'ını ekle
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  
+  // Aktif tab içeriğini göster
+  document.getElementById(tabName).classList.add('active');
+}
+
+// Ürün düzenleme için formu doldur
+function editProduct(code, name, unit, tiers) {
+  // Formu doldur
+  document.getElementById("code").value = code;
+  document.getElementById("name").value = name;
+  document.getElementById("unit").value = unit;
+  
+  // Kademeleri temizle
+  document.getElementById("tiers").innerHTML = "";
+  
+  // Kademeleri ekle
+  tiers.forEach((tier, index) => {
+    addTier();
+    const tierItems = document.querySelectorAll(".tier-item");
+    const lastTier = tierItems[tierItems.length - 1];
+    
+    lastTier.querySelector(".tier-min").value = tier.min;
+    lastTier.querySelector(".tier-price").value = tier.price;
+  });
+  
+  // Edit modunu aktif et
+  document.getElementById("save-btn").setAttribute("data-mode", "edit");
+  document.getElementById("save-btn").innerHTML = '<i class="fas fa-edit"></i> Ürünü Güncelle';
+  
+  // Ürün listesi tabına geç
+  switchTab('add-product');
+  
+  showNotification("Ürün düzenleme moduna geçildi!", "success");
+}
 </script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getFirestore, 
+  doc, 
+  setDoc, 
+  getDocs, 
+  collection, 
+  deleteDoc,
+  onSnapshot,
+  query,
+  orderBy 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAYgBx5T_7aS6IeV3f-T6KVjzZg6V5kRY0",
   authDomain: "buro-copy-fiyat-listesi.firebaseapp.com",
@@ -788,6 +981,125 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+let currentEditId = null;
+let productsList = [];
+
+// Firebase'den ürünleri gerçek zamanlı olarak yükle
+async function loadProducts() {
+  if (sessionStorage.getItem("adminAuth") !== "true") return;
+  
+  const loadingIndicator = document.getElementById("products-loading");
+  const productsTable = document.getElementById("products-table-body");
+  const statsProducts = document.getElementById("stats-products");
+  const statsTiers = document.getElementById("stats-tiers");
+  const statsUpdated = document.getElementById("stats-updated");
+  
+  try {
+    loadingIndicator.style.display = "flex";
+    
+    // Gerçek zamanlı dinleyici
+    const q = query(collection(db, "products"), orderBy("lastUpdated", "desc"));
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      productsList = [];
+      productsTable.innerHTML = "";
+      let totalTiers = 0;
+      let latestUpdate = null;
+      
+      if (querySnapshot.empty) {
+        productsTable.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+              <i class="fas fa-info-circle"></i> Henüz kayıtlı ürün bulunmuyor
+            </td>
+          </tr>
+        `;
+      } else {
+        querySnapshot.forEach((doc) => {
+          const product = {
+            id: doc.id,
+            ...doc.data()
+          };
+          productsList.push(product);
+          
+          // Toplam kademe sayısını hesapla
+          totalTiers += product.tiers ? product.tiers.length : 0;
+          
+          // En güncel tarihi bul
+          if (product.lastUpdated && (!latestUpdate || product.lastUpdated > latestUpdate)) {
+            latestUpdate = product.lastUpdated;
+          }
+          
+          // Tabloya ekle
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td><strong>${doc.id}</strong></td>
+            <td>${product.name}</td>
+            <td>${product.unit}</td>
+            <td>${product.tiers ? product.tiers.length : 0}</td>
+            <td>${product.lastUpdated ? new Date(product.lastUpdated).toLocaleDateString('tr-TR') : '-'}</td>
+            <td>
+              <div class="product-actions">
+                <button class="action-btn action-btn-sm btn-edit" onclick="editProduct('${doc.id}', '${product.name.replace(/'/g, "\\'")}', '${product.unit}', ${JSON.stringify(product.tiers || [])})">
+                  <i class="fas fa-edit"></i> Düzenle
+                </button>
+                <button class="action-btn action-btn-sm btn-delete" onclick="deleteProduct('${doc.id}')">
+                  <i class="fas fa-trash"></i> Sil
+                </button>
+              </div>
+            </td>
+          `;
+          productsTable.appendChild(row);
+        });
+      }
+      
+      // İstatistikleri güncelle
+      statsProducts.textContent = querySnapshot.size;
+      statsTiers.textContent = totalTiers;
+      
+      if (latestUpdate) {
+        const date = new Date(latestUpdate);
+        statsUpdated.textContent = date.toLocaleDateString('tr-TR') + ' ' + date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+      } else {
+        statsUpdated.textContent = '-';
+      }
+      
+      loadingIndicator.style.display = "none";
+    });
+    
+    // Çıkış yapıldığında unsubscribe et
+    window.addEventListener('beforeunload', () => {
+      unsubscribe();
+    });
+    
+  } catch (error) {
+    console.error("Ürün yükleme hatası:", error);
+    showNotification("Ürünler yüklenirken bir hata oluştu!", "error");
+    loadingIndicator.style.display = "none";
+  }
+}
+
+// Ürün sil
+async function deleteProduct(productId) {
+  if (sessionStorage.getItem("adminAuth") !== "true") {
+    showNotification("Önce giriş yapmalısınız!", "error");
+    return;
+  }
+  
+  if (!confirm(`"${productId}" ürününü silmek istediğinize emin misiniz?`)) {
+    return;
+  }
+  
+  try {
+    await deleteDoc(doc(db, "products", productId));
+    showNotification("Ürün başarıyla silindi!", "success");
+  } catch (error) {
+    console.error("Silme hatası:", error);
+    showNotification("Ürün silinirken bir hata oluştu!", "error");
+  }
+}
+
+// Kademe ekle
 window.addTier = function () {
   if (sessionStorage.getItem("adminAuth") !== "true") {
     showNotification("Önce giriş yapmalısınız!", "error");
@@ -819,9 +1131,16 @@ window.addTier = function () {
   tiersContainer.appendChild(tierDiv);
 };
 
+// Kademe sil
 window.removeTier = function (button) {
   if (sessionStorage.getItem("adminAuth") !== "true") {
     showNotification("Önce giriş yapmalısınız!", "error");
+    return;
+  }
+  
+  const tierItems = document.querySelectorAll('.tier-item');
+  if (tierItems.length <= 1) {
+    showNotification("En az bir kademe olmalıdır!", "warning");
     return;
   }
   
@@ -829,12 +1148,14 @@ window.removeTier = function (button) {
   updateTierNumbers();
 };
 
+// Kademe numaralarını güncelle
 function updateTierNumbers() {
   document.querySelectorAll('.tier-item').forEach((tier, index) => {
     tier.querySelector('.tier-number').textContent = `${index + 1}. KADEME`;
   });
 }
 
+// Ürün kaydet/güncelle
 window.saveProduct = async function () {
   if (sessionStorage.getItem("adminAuth") !== "true") {
     showNotification("Önce giriş yapmalısınız!", "error");
@@ -844,6 +1165,8 @@ window.saveProduct = async function () {
   const code = document.getElementById("code").value.trim();
   const name = document.getElementById("name").value.trim();
   const unit = document.getElementById("unit").value;
+  const saveBtn = document.getElementById("save-btn");
+  const isEditMode = saveBtn.getAttribute("data-mode") === "edit";
 
   if (!code || !name || !unit) {
     showNotification("Lütfen tüm zorunlu alanları doldurun!", "error");
@@ -865,6 +1188,7 @@ window.saveProduct = async function () {
     const price = Number(row.querySelector(".tier-price").value);
     
     if (min && price) {
+      // Kademelerin sıralı olduğundan emin ol
       if (index > 0) {
         const prevMin = Number(tierElements[index-1].querySelector(".tier-min").value);
         if (min <= prevMin) {
@@ -889,20 +1213,46 @@ window.saveProduct = async function () {
       lastUpdated: new Date().toISOString()
     });
     
-    showNotification("Ürün başarıyla kaydedildi!", "success");
+    showNotification(`Ürün başarıyla ${isEditMode ? 'güncellendi' : 'kaydedildi'}!`, "success");
     
-    document.getElementById("code").value = "";
-    document.getElementById("name").value = "";
-    document.getElementById("unit").value = "adet";
-    document.getElementById("tiers").innerHTML = "";
+    // Formu temizle
+    resetForm();
     
-    addTier();
+    // Ürün listesi tabına geç
+    switchTab('product-list');
     
   } catch (error) {
     console.error("Kaydetme hatası:", error);
-    showNotification("Kayıt sırasında bir hata oluştu!", "error");
+    showNotification("İşlem sırasında bir hata oluştu!", "error");
   }
 };
+
+// Formu sıfırla
+window.resetForm = function() {
+  document.getElementById("code").value = "";
+  document.getElementById("name").value = "";
+  document.getElementById("unit").value = "adet";
+  document.getElementById("tiers").innerHTML = "";
+  
+  // Save butonunu normal moda döndür
+  const saveBtn = document.getElementById("save-btn");
+  saveBtn.setAttribute("data-mode", "add");
+  saveBtn.innerHTML = '<i class="fas fa-save"></i> Ürünü Kaydet';
+  
+  // İlk kademeyi ekle
+  addTier();
+};
+
+// Sayfa yüklendiğinde
+document.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem("adminAuth") === "true") {
+    sessionStorage.setItem("adminAuth", "true");
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-container').style.display = 'block';
+    addTier();
+    loadProducts();
+  }
+});
 </script>
 </head>
 <body>
@@ -939,8 +1289,7 @@ window.saveProduct = async function () {
 <div id="admin-container" class="admin-container">
   <!-- Header -->
   <div class="admin-header">
-    <div class="header-left header-with-logo">
-  <img src="./logo.png" alt="Büro Copy Logo" class="panel-logo">
+    <div class="header-left">
       <h1>Ürün Yönetim Paneli</h1>
       <p>Ürün ve fiyat kademelerini yönetin</p>
     </div>
@@ -955,28 +1304,40 @@ window.saveProduct = async function () {
     </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Ürün Ekleme Paneli -->
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="add-product" onclick="switchTab('add-product')">
+      <i class="fas fa-plus-circle"></i> Yeni Ürün
+    </button>
+    <button class="tab-btn" data-tab="product-list" onclick="switchTab('product-list')">
+      <i class="fas fa-list"></i> Ürün Listesi
+    </button>
+    <button class="tab-btn" data-tab="stats" onclick="switchTab('stats')">
+      <i class="fas fa-chart-bar"></i> İstatistikler
+    </button>
+  </div>
+
+  <!-- Yeni Ürün Ekle Tab -->
+  <div id="add-product" class="tab-content active">
     <div class="glass-panel">
       <div class="panel-header">
         <i class="fas fa-plus-circle"></i>
-        <h2>Yeni Ürün Ekle</h2>
+        <h2>Yeni Ürün Ekle / Düzenle</h2>
       </div>
       
       <div class="form-grid">
         <div class="form-group">
-          <label class="form-label">Ürün Kodu</label>
+          <label class="form-label"><i class="fas fa-barcode"></i> Ürün Kodu*</label>
           <input type="text" id="code" class="glass-input" placeholder="örn: BC-001">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Ürün Adı</label>
+          <label class="form-label"><i class="fas fa-box"></i> Ürün Adı*</label>
           <input type="text" id="name" class="glass-input" placeholder="örn: A4 Fotokopi Kağıdı">
         </div>
         
         <div class="form-group">
-          <label class="form-label">Birim</label>
+          <label class="form-label"><i class="fas fa-ruler"></i> Birim*</label>
           <select id="unit" class="glass-input">
             <option value="adet">Adet</option>
             <option value="m">Metre</option>
@@ -984,14 +1345,6 @@ window.saveProduct = async function () {
             <option value="kg">Kilogram</option>
             <option value="paket">Paket</option>
             <option value="top">Top</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Durum</label>
-          <select class="glass-input">
-            <option value="active">Aktif</option>
-            <option value="inactive">Pasif</option>
           </select>
         </div>
       </div>
@@ -1009,36 +1362,83 @@ window.saveProduct = async function () {
         <button class="btn btn-add" onclick="addTier()">
           <i class="fas fa-plus"></i> Kademe Ekle
         </button>
-        <button class="btn btn-primary" onclick="saveProduct()">
+        <button class="btn btn-primary" id="save-btn" data-mode="add" onclick="saveProduct()">
           <i class="fas fa-save"></i> Ürünü Kaydet
+        </button>
+        <button class="btn btn-secondary" onclick="resetForm()">
+          <i class="fas fa-redo"></i> Formu Temizle
         </button>
       </div>
     </div>
+  </div>
 
-    <!-- Bilgi Paneli -->
+  <!-- Ürün Listesi Tab -->
+  <div id="product-list" class="tab-content">
+    <div class="glass-panel">
+      <div class="panel-header">
+        <i class="fas fa-list"></i>
+        <h2>Tüm Ürünler</h2>
+      </div>
+      
+      <div id="products-loading" class="loading-indicator">
+        <div class="spinner"></div>
+        <span>Ürünler yükleniyor...</span>
+      </div>
+      
+      <div class="products-table-container">
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>Ürün Kodu</th>
+              <th>Ürün Adı</th>
+              <th>Birim</th>
+              <th>Kademe Sayısı</th>
+              <th>Son Güncelleme</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body">
+            <!-- Ürünler buraya eklenecek -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="action-buttons" style="margin-top: 24px;">
+        <button class="btn btn-secondary" onclick="switchTab('add-product')">
+          <i class="fas fa-plus"></i> Yeni Ürün Ekle
+        </button>
+        <button class="btn btn-secondary" onclick="loadProducts()">
+          <i class="fas fa-sync"></i> Listeyi Yenile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- İstatistikler Tab -->
+  <div id="stats" class="tab-content">
     <div class="glass-panel">
       <div class="panel-header">
         <i class="fas fa-chart-bar"></i>
-        <h2>Sistem Bilgileri</h2>
+        <h2>Sistem İstatistikleri</h2>
       </div>
       
       <div class="info-grid">
         <div class="info-card">
           <i class="fas fa-database"></i>
           <h3>Toplam Ürün</h3>
-          <p>--</p>
+          <p id="stats-products">0</p>
         </div>
         
         <div class="info-card">
           <i class="fas fa-layer-group"></i>
-          <h3>Aktif Kademe</h3>
-          <p>--</p>
+          <h3>Toplam Kademe</h3>
+          <p id="stats-tiers">0</p>
         </div>
         
         <div class="info-card">
           <i class="fas fa-clock"></i>
           <h3>Son Güncelleme</h3>
-          <p>--</p>
+          <p id="stats-updated">-</p>
         </div>
       </div>
       
@@ -1048,10 +1448,11 @@ window.saveProduct = async function () {
       </div>
       
       <div style="color: var(--text-secondary); line-height: 1.6; font-size: 14px;">
-        <p>1. Ürün kodu benzersiz olmalıdır</p>
-        <p>2. Fiyat kademeleri artan sırada olmalıdır</p>
-        <p>3. Her ürün için en az bir kademe ekleyin</p>
-        <p>4. Kaydedilen ürünler anında fiyat hesaplama panelinde görünecektir</p>
+        <p><strong>1. Yeni Ürün Ekleme:</strong> Ürün kodu, adı, birim ve en az bir kademe ekleyin.</p>
+        <p><strong>2. Ürün Düzenleme:</strong> Ürün listesinden düzenlemek istediğiniz ürünün "Düzenle" butonuna tıklayın.</p>
+        <p><strong>3. Ürün Silme:</strong> Ürün listesinden silmek istediğiniz ürünün "Sil" butonuna tıklayın.</p>
+        <p><strong>4. Gerçek Zamanlı Güncelleme:</strong> Tüm değişiklikler anında Firebase'de güncellenir.</p>
+        <p><strong>5. Fiyat Hesaplama:</strong> Kaydedilen ürünler anında fiyat hesaplama panelinde görünür.</p>
       </div>
     </div>
   </div>
@@ -1059,9 +1460,11 @@ window.saveProduct = async function () {
   <!-- Footer -->
   <div class="glass-panel" style="margin-top: 32px; text-align: center;">
     <div style="color: var(--text-secondary); font-size: 14px;">
-      <p>© 2024 Büro Copy Yönetim Paneli | Firebase ile entegre | Versiyon 2.0</p>
+      <p>© 2026 Can Ahmet Tosun | Büro Copy Fiyat Hesaplama</p>
       <p style="margin-top: 8px; font-size: 12px; opacity: 0.7;">
-        <i class="fas fa-shield-alt"></i> Güvenli Oturum
+        <i class="fas fa-shield-alt"></i> Güvenli Oturum | 
+        <i class="fas fa-bolt"></i> Gerçek Zamanlı Veri | 
+        <i class="fas fa-sync"></i> Otomatik Güncelleme
       </p>
     </div>
   </div>
