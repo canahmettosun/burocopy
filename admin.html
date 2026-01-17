@@ -963,12 +963,12 @@ import {
   getDocs, 
   collection, 
   deleteDoc,
-  onSnapshot,
   query,
-  orderBy 
+  orderBy,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 FIREBASE CONFIG */
+/* 🔥 FIREBASE CONFIG - KONTROL ET! */
 const firebaseConfig = {
   apiKey: "AIzaSyAYgBx5T_7aS6IeV3f-T6KVjzZg6V5kRY0",
   authDomain: "buro-copy-fiyat-listesi.firebaseapp.com",
@@ -978,15 +978,31 @@ const firebaseConfig = {
   appId: "1:969205548894:web:7ff904261fb355e85771cf"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+console.log("🔥 Firebase Config Kontrol:");
+console.log("Project ID:", firebaseConfig.projectId);
+console.log("API Key:", firebaseConfig.apiKey ? "✓ Mevcut" : "✗ Eksik");
+
+let app;
+let db;
+
+try {
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  console.log("✅ Firebase başarıyla başlatıldı!");
+} catch (error) {
+  console.error("❌ Firebase başlatma hatası:", error);
+  showNotification("Firebase bağlantı hatası!", "error");
+}
 
 let currentEditId = null;
 let productsList = [];
 
-// Firebase'den ürünleri gerçek zamanlı olarak yükle
+// Firebase'den ürünleri yükle
 async function loadProducts() {
-  if (sessionStorage.getItem("adminAuth") !== "true") return;
+  if (sessionStorage.getItem("adminAuth") !== "true") {
+    console.log("⛔ Kullanıcı giriş yapmamış");
+    return;
+  }
   
   const loadingIndicator = document.getElementById("products-loading");
   const productsTable = document.getElementById("products-table-body");
@@ -995,86 +1011,115 @@ async function loadProducts() {
   const statsUpdated = document.getElementById("stats-updated");
   
   try {
+    console.log("🔄 Ürünler yükleniyor...");
     loadingIndicator.style.display = "flex";
     
-    // Gerçek zamanlı dinleyici
-    const q = query(collection(db, "products"), orderBy("lastUpdated", "desc"));
+    // Firestore bağlantısını kontrol et
+    if (!db) {
+      throw new Error("Firestore bağlantısı yok!");
+    }
     
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      productsList = [];
-      productsTable.innerHTML = "";
-      let totalTiers = 0;
-      let latestUpdate = null;
-      
-      if (querySnapshot.empty) {
-        productsTable.innerHTML = `
-          <tr>
-            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
-              <i class="fas fa-info-circle"></i> Henüz kayıtlı ürün bulunmuyor
-            </td>
-          </tr>
+    // Koleksiyon referansı
+    const productsRef = collection(db, "products");
+    console.log("📁 Koleksiyon referansı oluşturuldu:", productsRef);
+    
+    // Sorgu oluştur
+    const q = query(productsRef, orderBy("lastUpdated", "desc"));
+    
+    // Verileri al
+    const querySnapshot = await getDocs(q);
+    console.log(`📊 ${querySnapshot.size} ürün bulundu`);
+    
+    productsList = [];
+    productsTable.innerHTML = "";
+    let totalTiers = 0;
+    let latestUpdate = null;
+    
+    if (querySnapshot.empty) {
+      console.log("ℹ️ Henüz kayıtlı ürün yok");
+      productsTable.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+            <i class="fas fa-info-circle"></i> Henüz kayıtlı ürün bulunmuyor. İlk ürünü eklemek için "Yeni Ürün" sekmesine geçin.
+          </td>
+        </tr>
+      `;
+    } else {
+      querySnapshot.forEach((doc) => {
+        console.log("📄 Ürün:", doc.id, "=>", doc.data());
+        const product = {
+          id: doc.id,
+          ...doc.data()
+        };
+        productsList.push(product);
+        
+        // Toplam kademe sayısını hesapla
+        totalTiers += product.tiers ? product.tiers.length : 0;
+        
+        // En güncel tarihi bul
+        if (product.lastUpdated && (!latestUpdate || product.lastUpdated > latestUpdate)) {
+          latestUpdate = product.lastUpdated;
+        }
+        
+        // Tabloya ekle
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><strong>${doc.id}</strong></td>
+          <td>${product.name}</td>
+          <td>${product.unit}</td>
+          <td>${product.tiers ? product.tiers.length : 0}</td>
+          <td>${product.lastUpdated ? new Date(product.lastUpdated).toLocaleDateString('tr-TR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) : '-'}</td>
+          <td>
+            <div class="product-actions">
+              <button class="action-btn action-btn-sm btn-edit" onclick="editProduct('${doc.id}', '${product.name.replace(/'/g, "\\'")}', '${product.unit}', ${JSON.stringify(product.tiers || [])})">
+                <i class="fas fa-edit"></i> Düzenle
+              </button>
+              <button class="action-btn action-btn-sm btn-delete" onclick="deleteProduct('${doc.id}')">
+                <i class="fas fa-trash"></i> Sil
+              </button>
+            </div>
+          </td>
         `;
-      } else {
-        querySnapshot.forEach((doc) => {
-          const product = {
-            id: doc.id,
-            ...doc.data()
-          };
-          productsList.push(product);
-          
-          // Toplam kademe sayısını hesapla
-          totalTiers += product.tiers ? product.tiers.length : 0;
-          
-          // En güncel tarihi bul
-          if (product.lastUpdated && (!latestUpdate || product.lastUpdated > latestUpdate)) {
-            latestUpdate = product.lastUpdated;
-          }
-          
-          // Tabloya ekle
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td><strong>${doc.id}</strong></td>
-            <td>${product.name}</td>
-            <td>${product.unit}</td>
-            <td>${product.tiers ? product.tiers.length : 0}</td>
-            <td>${product.lastUpdated ? new Date(product.lastUpdated).toLocaleDateString('tr-TR') : '-'}</td>
-            <td>
-              <div class="product-actions">
-                <button class="action-btn action-btn-sm btn-edit" onclick="editProduct('${doc.id}', '${product.name.replace(/'/g, "\\'")}', '${product.unit}', ${JSON.stringify(product.tiers || [])})">
-                  <i class="fas fa-edit"></i> Düzenle
-                </button>
-                <button class="action-btn action-btn-sm btn-delete" onclick="deleteProduct('${doc.id}')">
-                  <i class="fas fa-trash"></i> Sil
-                </button>
-              </div>
-            </td>
-          `;
-          productsTable.appendChild(row);
-        });
-      }
-      
-      // İstatistikleri güncelle
-      statsProducts.textContent = querySnapshot.size;
-      statsTiers.textContent = totalTiers;
-      
-      if (latestUpdate) {
-        const date = new Date(latestUpdate);
-        statsUpdated.textContent = date.toLocaleDateString('tr-TR') + ' ' + date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-      } else {
-        statsUpdated.textContent = '-';
-      }
-      
-      loadingIndicator.style.display = "none";
-    });
+        productsTable.appendChild(row);
+      });
+    }
     
-    // Çıkış yapıldığında unsubscribe et
-    window.addEventListener('beforeunload', () => {
-      unsubscribe();
-    });
+    // İstatistikleri güncelle
+    statsProducts.textContent = querySnapshot.size;
+    statsTiers.textContent = totalTiers;
+    
+    if (latestUpdate) {
+      const date = new Date(latestUpdate);
+      statsUpdated.textContent = date.toLocaleDateString('tr-TR') + ' ' + 
+        date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    } else {
+      statsUpdated.textContent = '-';
+    }
+    
+    console.log("✅ Ürünler başarıyla yüklendi");
+    loadingIndicator.style.display = "none";
     
   } catch (error) {
-    console.error("Ürün yükleme hatası:", error);
-    showNotification("Ürünler yüklenirken bir hata oluştu!", "error");
+    console.error("❌ Ürün yükleme hatası:", error);
+    console.error("Hata detayı:", error.message);
+    console.error("Hata stack:", error.stack);
+    
+    productsTable.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; padding: 40px; color: var(--danger);">
+          <i class="fas fa-exclamation-triangle"></i> Hata: ${error.message}<br>
+          <small>Lütfen Firebase konsolunu kontrol edin.</small>
+        </td>
+      </tr>
+    `;
+    
+    showNotification(`Veriler yüklenirken hata: ${error.message}`, "error");
     loadingIndicator.style.display = "none";
   }
 }
@@ -1086,15 +1131,17 @@ async function deleteProduct(productId) {
     return;
   }
   
-  if (!confirm(`"${productId}" ürününü silmek istediğinize emin misiniz?`)) {
+  if (!confirm(`"${productId}" ürününü silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`)) {
     return;
   }
   
   try {
     await deleteDoc(doc(db, "products", productId));
     showNotification("Ürün başarıyla silindi!", "success");
+    // Listeyi yenile
+    loadProducts();
   } catch (error) {
-    console.error("Silme hatası:", error);
+    console.error("❌ Silme hatası:", error);
     showNotification("Ürün silinirken bir hata oluştu!", "error");
   }
 }
@@ -1206,6 +1253,8 @@ window.saveProduct = async function () {
   if (!isValid) return;
 
   try {
+    console.log("💾 Ürün kaydediliyor:", { code, name, unit, tiers });
+    
     await setDoc(doc(db, "products", code), {
       name,
       unit,
@@ -1218,11 +1267,14 @@ window.saveProduct = async function () {
     // Formu temizle
     resetForm();
     
+    // Ürün listesini yenile
+    loadProducts();
+    
     // Ürün listesi tabına geç
     switchTab('product-list');
     
   } catch (error) {
-    console.error("Kaydetme hatası:", error);
+    console.error("❌ Kaydetme hatası:", error);
     showNotification("İşlem sırasında bir hata oluştu!", "error");
   }
 };
@@ -1243,15 +1295,59 @@ window.resetForm = function() {
   addTier();
 };
 
+// Test fonksiyonu - Firebase bağlantısını test et
+window.testFirebase = async function() {
+  console.log("🧪 Firebase test ediliyor...");
+  
+  try {
+    // Test için bir koleksiyon listesi al
+    const collections = await getDocs(collection(db, "products"));
+    console.log("✅ Firebase bağlantısı başarılı!");
+    console.log(`📊 ${collections.size} ürün bulundu`);
+    
+    // Test ürünü ekle
+    const testProduct = {
+      name: "Test Ürünü",
+      unit: "adet",
+      tiers: [{ min: 1, price: 10.50 }],
+      lastUpdated: new Date().toISOString()
+    };
+    
+    await setDoc(doc(db, "products", "TEST001"), testProduct);
+    console.log("✅ Test ürünü başarıyla eklendi!");
+    
+    showNotification("Firebase bağlantısı başarılı!", "success");
+    
+    // Listeyi yenile
+    loadProducts();
+    
+  } catch (error) {
+    console.error("❌ Firebase test hatası:", error);
+    showNotification(`Firebase test hatası: ${error.message}`, "error");
+  }
+};
+
 // Sayfa yüklendiğinde
 document.addEventListener('DOMContentLoaded', function() {
-  if (localStorage.getItem("adminAuth") === "true") {
-    sessionStorage.setItem("adminAuth", "true");
+  // Giriş kontrolü
+  if (sessionStorage.getItem("adminAuth") === "true") {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-container').style.display = 'block';
     addTier();
-    loadProducts();
+    
+    // Firebase'i test et
+    setTimeout(() => {
+      if (db) {
+        loadProducts();
+      } else {
+        console.error("❌ Firebase bağlantısı yok!");
+      }
+    }, 1000);
   }
+  
+  // Tarayıcı konsolunu açık bırakmak için mesaj
+  console.log("🔧 Hata ayıklama için konsolu açık tutun!");
+  console.log("🔄 Firebase durumu:", db ? "✅ Bağlı" : "❌ Bağlı Değil");
 });
 </script>
 </head>
@@ -1302,6 +1398,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <i class="fas fa-sign-out-alt"></i> Çıkış
       </button>
     </div>
+  </div>
+
+  <!-- Debug Butonu -->
+  <div style="margin-bottom: 20px;">
+    <button class="btn btn-secondary" onclick="testFirebase()" style="padding: 10px 20px;">
+      <i class="fas fa-bug"></i> Firebase Test Et
+    </button>
   </div>
 
   <!-- Tabs -->
@@ -1444,15 +1547,15 @@ document.addEventListener('DOMContentLoaded', function() {
       
       <div class="panel-header" style="margin-top: 32px;">
         <i class="fas fa-info-circle"></i>
-        <h2>Kullanım Kılavuzu</h2>
+        <h2>Firebase Durumu</h2>
       </div>
       
       <div style="color: var(--text-secondary); line-height: 1.6; font-size: 14px;">
-        <p><strong>1. Yeni Ürün Ekleme:</strong> Ürün kodu, adı, birim ve en az bir kademe ekleyin.</p>
-        <p><strong>2. Ürün Düzenleme:</strong> Ürün listesinden düzenlemek istediğiniz ürünün "Düzenle" butonuna tıklayın.</p>
-        <p><strong>3. Ürün Silme:</strong> Ürün listesinden silmek istediğiniz ürünün "Sil" butonuna tıklayın.</p>
-        <p><strong>4. Gerçek Zamanlı Güncelleme:</strong> Tüm değişiklikler anında Firebase'de güncellenir.</p>
-        <p><strong>5. Fiyat Hesaplama:</strong> Kaydedilen ürünler anında fiyat hesaplama panelinde görünür.</p>
+        <p><strong>Project ID:</strong> buro-copy-fiyat-listesi</p>
+        <p><strong>API Key:</strong> AIzaSyAYgBx5T_7aS6IeV3f-T6KVjzZg6V5kRY0</p>
+        <p><strong>Domain:</strong> buro-copy-fiyat-listesi.firebaseapp.com</p>
+        <p><strong>Koleksiyon Adı:</strong> products</p>
+        <p><strong>Tarayıcı Konsolu:</strong> F12'ye basıp "Console" sekmesini açın</p>
       </div>
     </div>
   </div>
@@ -1460,7 +1563,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <!-- Footer -->
   <div class="glass-panel" style="margin-top: 32px; text-align: center;">
     <div style="color: var(--text-secondary); font-size: 14px;">
-      <p>© 2026 Can Ahmet Tosun | Büro Copy Fiyat Hesaplama</p>
+      <p>© 2024 Büro Copy Yönetim Paneli | Firebase ile entegre | Versiyon 2.2</p>
       <p style="margin-top: 8px; font-size: 12px; opacity: 0.7;">
         <i class="fas fa-shield-alt"></i> Güvenli Oturum | 
         <i class="fas fa-bolt"></i> Gerçek Zamanlı Veri | 
