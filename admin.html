@@ -922,36 +922,6 @@ function switchTab(tabName) {
   // Aktif tab içeriğini göster
   document.getElementById(tabName).classList.add('active');
 }
-
-// Ürün düzenleme için formu doldur
-function editProduct(code, name, unit, tiers) {
-  // Formu doldur
-  document.getElementById("code").value = code;
-  document.getElementById("name").value = name;
-  document.getElementById("unit").value = unit;
-  
-  // Kademeleri temizle
-  document.getElementById("tiers").innerHTML = "";
-  
-  // Kademeleri ekle
-  tiers.forEach((tier, index) => {
-    addTier();
-    const tierItems = document.querySelectorAll(".tier-item");
-    const lastTier = tierItems[tierItems.length - 1];
-    
-    lastTier.querySelector(".tier-min").value = tier.min;
-    lastTier.querySelector(".tier-price").value = tier.price;
-  });
-  
-  // Edit modunu aktif et
-  document.getElementById("save-btn").setAttribute("data-mode", "edit");
-  document.getElementById("save-btn").innerHTML = '<i class="fas fa-edit"></i> Ürünü Güncelle';
-  
-  // Ürün listesi tabına geç
-  switchTab('add-product');
-  
-  showNotification("Ürün düzenleme moduna geçildi!", "success");
-}
 </script>
 
 <script type="module">
@@ -968,7 +938,7 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔥 FIREBASE CONFIG - KONTROL ET! */
+/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAYgBx5T_7aS6IeV3f-T6KVjzZg6V5kRY0",
   authDomain: "buro-copy-fiyat-listesi.firebaseapp.com",
@@ -1063,6 +1033,18 @@ async function loadProducts() {
         
         // Tabloya ekle
         const row = document.createElement("tr");
+        
+        // Ürün adını güvenli hale getir (HTML entity'leri kullan)
+        const safeName = product.name
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+        
+        // Tiers verisini stringify et
+        const tiersString = JSON.stringify(product.tiers || []);
+        
         row.innerHTML = `
           <td><strong>${doc.id}</strong></td>
           <td>${product.name}</td>
@@ -1077,7 +1059,7 @@ async function loadProducts() {
           }) : '-'}</td>
           <td>
             <div class="product-actions">
-              <button class="action-btn action-btn-sm btn-edit" onclick="editProduct('${doc.id}', '${product.name.replace(/'/g, "\\'")}', '${product.unit}', ${JSON.stringify(product.tiers || [])})">
+              <button class="action-btn action-btn-sm btn-edit" onclick="handleEditProduct('${doc.id}', '${safeName}', '${product.unit}', '${encodeURIComponent(tiersString)}')">
                 <i class="fas fa-edit"></i> Düzenle
               </button>
               <button class="action-btn action-btn-sm btn-delete" onclick="deleteProduct('${doc.id}')">
@@ -1121,6 +1103,93 @@ async function loadProducts() {
     
     showNotification(`Veriler yüklenirken hata: ${error.message}`, "error");
     loadingIndicator.style.display = "none";
+  }
+}
+
+// Düzenleme işlemini yönet
+window.handleEditProduct = function(code, safeName, unit, encodedTiers) {
+  try {
+    // HTML entity'lerini geri çevir
+    const name = safeName
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'");
+    
+    // Tiers verisini decode et ve parse et
+    const tiersString = decodeURIComponent(encodedTiers);
+    const tiers = JSON.parse(tiersString);
+    
+    console.log("✏️ Düzenlenecek ürün:", { code, name, unit, tiers });
+    
+    // Ürünü düzenleme fonksiyonunu çağır
+    editProduct(code, name, unit, tiers);
+  } catch (error) {
+    console.error("❌ Düzenleme hatası:", error);
+    showNotification("Ürün düzenlenirken bir hata oluştu!", "error");
+  }
+};
+
+// Ürün düzenleme için formu doldur
+function editProduct(code, name, unit, tiers) {
+  try {
+    console.log("🔄 Form dolduruluyor:", code);
+    
+    // Formu doldur
+    document.getElementById("code").value = code;
+    document.getElementById("name").value = name;
+    document.getElementById("unit").value = unit;
+    
+    // Kademeleri temizle
+    const tiersContainer = document.getElementById("tiers");
+    tiersContainer.innerHTML = "";
+    
+    console.log("📋 Kademe sayısı:", tiers.length);
+    
+    // Kademeleri ekle
+    tiers.forEach((tier, index) => {
+      console.log(`📊 Kademe ${index + 1}:`, tier);
+      addTier();
+      
+      const tierItems = document.querySelectorAll(".tier-item");
+      const lastTier = tierItems[tierItems.length - 1];
+      
+      if (lastTier) {
+        const minInput = lastTier.querySelector(".tier-min");
+        const priceInput = lastTier.querySelector(".tier-price");
+        
+        if (minInput && priceInput) {
+          minInput.value = tier.min;
+          priceInput.value = tier.price;
+          console.log(`✅ Kademe ${index + 1} dolduruldu:`, tier.min, tier.price);
+        }
+      }
+    });
+    
+    // Eğer hiç kademe yoksa bir tane ekle
+    if (tiers.length === 0) {
+      console.log("⚠️ Kademe yok, yeni ekleniyor");
+      addTier();
+    }
+    
+    // Edit modunu aktif et
+    const saveBtn = document.getElementById("save-btn");
+    saveBtn.setAttribute("data-mode", "edit");
+    saveBtn.innerHTML = '<i class="fas fa-edit"></i> Ürünü Güncelle';
+    
+    // Yeni ürün ekleme tabına geç
+    switchTab('add-product');
+    
+    // Formun en üstüne scroll et
+    document.getElementById("add-product").scrollIntoView({ behavior: 'smooth' });
+    
+    console.log("✅ Form başarıyla dolduruldu");
+    showNotification("Ürün düzenleme moduna geçildi!", "success");
+    
+  } catch (error) {
+    console.error("❌ Form doldurma hatası:", error);
+    showNotification("Form doldurulurken bir hata oluştu!", "error");
   }
 }
 
@@ -1231,13 +1300,19 @@ window.saveProduct = async function () {
   let isValid = true;
   
   tierElements.forEach((row, index) => {
-    const min = Number(row.querySelector(".tier-min").value);
-    const price = Number(row.querySelector(".tier-price").value);
+    const minInput = row.querySelector(".tier-min");
+    const priceInput = row.querySelector(".tier-price");
+    
+    const min = minInput ? Number(minInput.value) : 0;
+    const price = priceInput ? Number(priceInput.value) : 0;
     
     if (min && price) {
       // Kademelerin sıralı olduğundan emin ol
       if (index > 0) {
-        const prevMin = Number(tierElements[index-1].querySelector(".tier-min").value);
+        const prevRow = tierElements[index-1];
+        const prevMinInput = prevRow.querySelector(".tier-min");
+        const prevMin = prevMinInput ? Number(prevMinInput.value) : 0;
+        
         if (min <= prevMin) {
           showNotification(`Kademe ${index+1}: Min değer önceki kademeden büyük olmalı!`, "error");
           isValid = false;
@@ -1293,6 +1368,8 @@ window.resetForm = function() {
   
   // İlk kademeyi ekle
   addTier();
+  
+  console.log("🔄 Form sıfırlandı");
 };
 
 // Test fonksiyonu - Firebase bağlantısını test et
@@ -1304,17 +1381,6 @@ window.testFirebase = async function() {
     const collections = await getDocs(collection(db, "products"));
     console.log("✅ Firebase bağlantısı başarılı!");
     console.log(`📊 ${collections.size} ürün bulundu`);
-    
-    // Test ürünü ekle
-    const testProduct = {
-      name: "Test Ürünü",
-      unit: "adet",
-      tiers: [{ min: 1, price: 10.50 }],
-      lastUpdated: new Date().toISOString()
-    };
-    
-    await setDoc(doc(db, "products", "TEST001"), testProduct);
-    console.log("✅ Test ürünü başarıyla eklendi!");
     
     showNotification("Firebase bağlantısı başarılı!", "success");
     
@@ -1563,7 +1629,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <!-- Footer -->
   <div class="glass-panel" style="margin-top: 32px; text-align: center;">
     <div style="color: var(--text-secondary); font-size: 14px;">
-      <p>© 2024 Büro Copy Yönetim Paneli | Firebase ile entegre | Versiyon 2.2</p>
+      <p>© 2024 Büro Copy Yönetim Paneli | Firebase ile entegre | Versiyon 2.3</p>
       <p style="margin-top: 8px; font-size: 12px; opacity: 0.7;">
         <i class="fas fa-shield-alt"></i> Güvenli Oturum | 
         <i class="fas fa-bolt"></i> Gerçek Zamanlı Veri | 
