@@ -289,6 +289,38 @@ select.glass-input option:checked {
   color: var(--text-primary);
 }
 
+/* Action Buttons */
+.action-btn {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+}
+
+.action-btn.secondary {
+  background: linear-gradient(135deg, var(--secondary), #34d399);
+}
+
+.action-btn.danger {
+  background: linear-gradient(135deg, var(--danger), #f87171);
+}
+
 /* Results Panel */
 .results-panel {
   background: linear-gradient(135deg, 
@@ -431,6 +463,63 @@ select.glass-input option:checked {
   font-size: 18px;
 }
 
+/* Cart Table */
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cart-table th {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 12px;
+}
+
+.cart-table td {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cart-table tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cart-table .product-name {
+  font-weight: 500;
+}
+
+.cart-table .product-quantity,
+.cart-table .product-unit-price,
+.cart-table .product-total {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+}
+
+.cart-table .remove-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cart-table .remove-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.05);
+}
+
 /* Loading Indicator */
 .loading-indicator {
   display: flex;
@@ -551,6 +640,12 @@ select.glass-input option:checked {
     right: 20px;
     max-width: none;
   }
+  
+  .cart-table th,
+  .cart-table td {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
 }
 
 /* Custom Scrollbar */
@@ -591,6 +686,7 @@ const db = getFirestore(app);
 
 let products = {};
 let loading = true;
+let cart = [];
 
 async function loadProducts() {
   const select = document.getElementById("product");
@@ -616,7 +712,6 @@ async function loadProducts() {
         opt.setAttribute("data-unit", doc.data().unit);
         select.appendChild(opt);
       });
-      showNotification(`${snap.size} ürün başarıyla yüklendi`, "success");
     }
   } catch (error) {
     console.error("Ürün yükleme hatası:", error);
@@ -733,6 +828,136 @@ function updateTierTable(tiers, unit, currentQty) {
   });
 }
 
+// Sepete ürün ekleme fonksiyonu
+window.addToCart = function() {
+  if (loading) {
+    showNotification("Ürünler yükleniyor, lütfen bekleyin...", "warning");
+    return;
+  }
+  
+  const productSelect = document.getElementById("product");
+  const selectedProduct = productSelect.value;
+  const p = products[selectedProduct];
+  const qty = Number(document.getElementById("amount").value);
+  
+  if (!p || !qty || qty <= 0) {
+    showNotification("Lütfen geçerli bir ürün ve miktar seçin!", "warning");
+    return;
+  }
+  
+  // Birim fiyatı hesapla
+  let unitPrice = 0;
+  const sortedTiers = [...p.tiers].sort((a, b) => b.min - a.min);
+  for (const tier of sortedTiers) {
+    if (qty >= tier.min) {
+      unitPrice = tier.price;
+      break;
+    }
+  }
+  
+  if (unitPrice === 0) {
+    showNotification("Bu miktar için uygun kademe bulunamadı!", "error");
+    return;
+  }
+  
+  // Sepete ekle
+  const cartItem = {
+    id: selectedProduct,
+    name: p.name,
+    quantity: qty,
+    unit: p.unit,
+    unitPrice: unitPrice,
+    total: unitPrice * qty,
+    timestamp: Date.now()
+  };
+  
+  cart.push(cartItem);
+  updateCartDisplay();
+  showNotification(`${p.name} sepete eklendi!`, "success");
+  
+  // Formu sıfırla
+  document.getElementById("amount").value = "";
+  calculate();
+};
+
+// Sepet göstergesini güncelle
+function updateCartDisplay() {
+  const cartTableBody = document.getElementById("cartTableBody");
+  const cartTotalElement = document.getElementById("cartTotal");
+  const cartCountElement = document.getElementById("cartCount");
+  const cartPanel = document.getElementById("cartPanel");
+  
+  if (cart.length === 0) {
+    cartTableBody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+          <i class="fas fa-shopping-cart"></i> Sepetiniz boş
+        </td>
+      </tr>
+    `;
+    cartTotalElement.innerText = "0.00";
+    cartCountElement.innerText = "0";
+    cartPanel.style.display = "none";
+    return;
+  }
+  
+  // Sepet panelini göster
+  cartPanel.style.display = "block";
+  
+  // Sepet sayacını güncelle
+  cartCountElement.innerText = cart.length;
+  
+  // Toplam tutarı hesapla
+  let total = 0;
+  
+  // Tabloyu güncelle
+  cartTableBody.innerHTML = "";
+  cart.forEach((item, index) => {
+    total += item.total;
+    
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td class="product-name">${item.name}</td>
+      <td class="product-quantity">${item.quantity} ${item.unit}</td>
+      <td class="product-unit-price">${item.unitPrice.toFixed(2)} ₺</td>
+      <td class="product-total">${item.total.toFixed(2)} ₺</td>
+      <td>
+        <button class="remove-btn" onclick="removeFromCart(${index})">
+          <i class="fas fa-trash"></i> Sil
+        </button>
+      </td>
+    `;
+    cartTableBody.appendChild(row);
+  });
+  
+  // Toplam tutarı güncelle
+  cartTotalElement.innerText = total.toFixed(2);
+}
+
+// Sepetten ürün çıkarma
+window.removeFromCart = function(index) {
+  if (index >= 0 && index < cart.length) {
+    const removedItem = cart[index];
+    cart.splice(index, 1);
+    updateCartDisplay();
+    showNotification(`${removedItem.name} sepetten çıkarıldı!`, "success");
+  }
+};
+
+// Sepeti tamamen temizle
+window.clearCart = function() {
+  if (cart.length === 0) {
+    showNotification("Sepetiniz zaten boş!", "warning");
+    return;
+  }
+  
+  if (confirm("Sepeti tamamen temizlemek istediğinize emin misiniz?")) {
+    cart = [];
+    updateCartDisplay();
+    showNotification("Sepet temizlendi!", "success");
+  }
+};
+
 function showNotification(message, type) {
   const existingNotifications = document.querySelectorAll(".notification");
   existingNotifications.forEach(notification => {
@@ -805,14 +1030,14 @@ window.resetAmount = function() {
 <div class="container">
   <!-- Başlık -->
   <div class="header">
-    <div class="header-left header-with-logo">
-  <img src="./logo.png" alt="Büro Copy Logo" class="panel-logo">
+    <div class="header-left">
       <h1>Fiyat Hesaplama Paneli</h1>
       <p>Hızlı ve kolay fiyat hesaplama aracı</p>
     </div>
     <div class="header-right">
       <i class="fas fa-calculator"></i>
       <span>HESAPLAMA</span>
+      <span id="cartCount" style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 14px;">0</span>
     </div>
   </div>
   
@@ -857,6 +1082,15 @@ window.resetAmount = function() {
       </div>
     </div>
     
+    <!-- Eylem Butonları -->
+    <button class="action-btn" onclick="calculate()">
+      <i class="fas fa-calculator"></i> Hesapla
+    </button>
+    
+    <button class="action-btn secondary" onclick="addToCart()">
+      <i class="fas fa-cart-plus"></i> Sepete Ekle
+    </button>
+    
     <!-- Hesaplama Sonuçları -->
     <div class="glass-panel results-panel">
       <div class="panel-header">
@@ -898,6 +1132,46 @@ window.resetAmount = function() {
       
       <!-- Kademe Bilgisi -->
       <div id="tierInfo"></div>
+    </div>
+    
+    <!-- Sepet Paneli -->
+    <div class="glass-panel" id="cartPanel" style="display: none;">
+      <div class="panel-header">
+        <i class="fas fa-shopping-cart"></i>
+        <h2>Sepetiniz</h2>
+        <button class="reset-btn" onclick="clearCart()" style="margin-left: auto;">
+          <i class="fas fa-trash"></i> Sepeti Temizle
+        </button>
+      </div>
+      
+      <div class="table-container">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Ürün Adı</th>
+              <th>Miktar</th>
+              <th>Birim Fiyat</th>
+              <th>Toplam</th>
+              <th>İşlem</th>
+            </tr>
+          </thead>
+          <tbody id="cartTableBody">
+            <!-- Sepet öğeleri buraya gelecek -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="results-grid" style="margin-top: 24px;">
+        <div class="result-card total-price">
+          <div class="result-label">
+            <i class="fas fa-receipt"></i> Ödenecek Tutar
+          </div>
+          <div class="result-value">
+            <span id="cartTotal">0.00</span>
+            <span class="result-unit">₺</span>
+          </div>
+        </div>
+      </div>
     </div>
     
     <!-- Kademe Tablosu -->
