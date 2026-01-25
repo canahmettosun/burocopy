@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Büro Copy – Fiyat Hesaplama</title>
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -30,16 +30,39 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--bg-gradient);
+  background: var(--bg-gradient) !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
   color: var(--text-primary);
-  min-height: 100vh;
-  padding: 20px;
+  padding: 16px;
   position: relative;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+/* Mobil için arka plan düzeltmesi */
+@media (max-width: 768px) {
+  body {
+    background: #0f172a !important; /* Gradient desteklemeyenler için düz renk */
+    background: var(--bg-gradient) !important;
+    background-size: 100% 100% !important;
+    padding: 12px;
+  }
 }
 
 /* Arka plan deseni */
@@ -55,30 +78,51 @@ body::before {
     radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.1) 0%, transparent 20%),
     radial-gradient(circle at 40% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 20%);
   z-index: -1;
+  pointer-events: none;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
 }
 
 /* Header */
 .header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 24px 0;
-  margin-bottom: 32px;
+  padding: 20px 0;
+  margin-bottom: 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  gap: 16px;
+}
+
+@media (min-width: 769px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
 }
 
 .header-left h1 {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+@media (min-width: 769px) {
+  .header-left h1 {
+    font-size: 32px;
+  }
 }
 
 .header-left p {
@@ -89,25 +133,41 @@ body::before {
 .header-right {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
-  padding: 12px 24px;
+  padding: 12px 20px;
   border-radius: 16px;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
+  white-space: nowrap;
+}
+
+@media (min-width: 769px) {
+  .header-right {
+    font-size: 16px;
+    padding: 12px 24px;
+  }
 }
 
 /* Glass Panel */
 .glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 32px;
-  margin-bottom: 32px;
-  box-shadow: var(--glass-shadow);
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (min-width: 769px) {
+  .glass-panel {
+    padding: 32px;
+    border-radius: 24px;
+  }
 }
 
 .glass-panel:hover {
@@ -119,53 +179,83 @@ body::before {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 28px;
-  padding-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+@media (min-width: 769px) {
+  .panel-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+  }
+}
+
 .panel-header i {
-  font-size: 28px;
+  font-size: 24px;
   color: var(--primary);
   background: rgba(124, 58, 237, 0.1);
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (min-width: 769px) {
+  .panel-header i {
+    font-size: 28px;
+    width: 56px;
+    height: 56px;
+  }
 }
 
 .panel-header h2 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
+}
+
+@media (min-width: 769px) {
+  .panel-header h2 {
+    font-size: 24px;
+  }
 }
 
 /* Form Grid */
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 32px;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 769px) {
   .form-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
   }
 }
 
 /* Form Group */
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 769px) {
+  .form-group {
+    margin-bottom: 24px;
+  }
 }
 
 .form-label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: var(--text-primary);
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   display: flex;
@@ -173,17 +263,33 @@ body::before {
   gap: 8px;
 }
 
+@media (min-width: 769px) {
+  .form-label {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+}
+
 /* Glass Input */
 .glass-input {
   width: 100%;
-  padding: 16px 20px;
+  padding: 14px 16px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  border-radius: 14px;
   color: var(--text-primary);
   font-size: 16px;
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+@media (min-width: 769px) {
+  .glass-input {
+    padding: 16px 20px;
+    border-radius: 16px;
+  }
 }
 
 .glass-input:focus {
@@ -195,57 +301,70 @@ body::before {
 
 /* Select Stilleri */
 select.glass-input {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238b5cf6' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 20px center;
-  background-size: 16px;
-  padding-right: 50px;
-  cursor: pointer;
+  background-position: right 16px center;
+  background-size: 14px;
+  padding-right: 40px;
+}
+
+@media (min-width: 769px) {
+  select.glass-input {
+    background-position: right 20px center;
+    background-size: 16px;
+    padding-right: 50px;
+  }
 }
 
 select.glass-input option {
   background-color: #0f172a !important;
   color: var(--text-primary) !important;
-  padding: 12px 20px !important;
+  padding: 12px !important;
   font-size: 16px !important;
-  border: none !important;
-}
-
-select.glass-input option:hover,
-select.glass-input option:focus,
-select.glass-input option:checked {
-  background-color: var(--primary) !important;
-  color: white !important;
 }
 
 /* Amount Controls */
 .amount-controls {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
+}
+
+@media (min-width: 769px) {
+  .amount-controls {
+    flex-direction: row;
+    align-items: center;
+  }
 }
 
 .amount-input-container {
   display: flex;
   align-items: center;
-  flex: 1;
+  width: 100%;
 }
 
 .amount-btn {
   background: rgba(124, 58, 237, 0.1);
   border: 1px solid rgba(124, 58, 237, 0.2);
   color: var(--primary);
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   transition: all 0.3s ease;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: rgba(124, 58, 237, 0.3);
+}
+
+@media (min-width: 769px) {
+  .amount-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
 }
 
 .amount-btn:hover {
@@ -254,12 +373,12 @@ select.glass-input option:checked {
 }
 
 .amount-btn:first-child {
-  border-radius: 16px 0 0 16px;
+  border-radius: 14px 0 0 14px;
   border-right: none;
 }
 
 .amount-btn:last-child {
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 14px 14px 0;
   border-left: none;
 }
 
@@ -267,21 +386,39 @@ select.glass-input option:checked {
   flex: 1;
   border-radius: 0;
   text-align: center;
-  height: 48px;
+  height: 44px;
+  border-left: none;
+  border-right: none;
+}
+
+@media (min-width: 769px) {
+  .amount-input-container input {
+    height: 48px;
+  }
 }
 
 .reset-btn {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-secondary);
-  padding: 12px 20px;
-  border-radius: 16px;
+  padding: 10px 16px;
+  border-radius: 14px;
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  width: 100%;
+}
+
+@media (min-width: 769px) {
+  .reset-btn {
+    width: auto;
+    padding: 12px 20px;
+    border-radius: 16px;
+  }
 }
 
 .reset-btn:hover {
@@ -294,7 +431,7 @@ select.glass-input option:checked {
   background: linear-gradient(135deg, var(--primary), var(--primary-light));
   color: white;
   border: none;
-  padding: 16px 24px;
+  padding: 16px 20px;
   border-radius: 16px;
   font-size: 16px;
   font-weight: 600;
@@ -306,6 +443,7 @@ select.glass-input option:checked {
   gap: 10px;
   width: 100%;
   margin-top: 16px;
+  -webkit-tap-highlight-color: rgba(124, 58, 237, 0.3);
 }
 
 .action-btn:hover {
@@ -321,6 +459,79 @@ select.glass-input option:checked {
   background: linear-gradient(135deg, var(--danger), #f87171);
 }
 
+/* Quick Add Section */
+.quick-add-section {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 769px) {
+  .quick-add-section {
+    padding: 20px;
+    border-radius: 16px;
+  }
+}
+
+.quick-add-title {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (min-width: 769px) {
+  .quick-add-title {
+    font-size: 14px;
+  }
+}
+
+.quick-add-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+@media (min-width: 480px) {
+  .quick-add-buttons {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 769px) {
+  .quick-add-buttons {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.quick-add-btn {
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  color: var(--primary);
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  -webkit-tap-highlight-color: rgba(124, 58, 237, 0.3);
+}
+
+.quick-add-btn:hover {
+  background: rgba(124, 58, 237, 0.2);
+  transform: translateY(-2px);
+}
+
 /* Results Panel */
 .results-panel {
   background: linear-gradient(135deg, 
@@ -331,13 +542,20 @@ select.glass-input option:checked {
 
 .results-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 480px) {
   .results-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 769px) {
+  .results-grid {
+    gap: 24px;
   }
 }
 
@@ -345,9 +563,15 @@ select.glass-input option:checked {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 16px;
-  padding: 24px;
+  padding: 20px;
   text-align: center;
   transition: all 0.3s ease;
+}
+
+@media (min-width: 769px) {
+  .result-card {
+    padding: 24px;
+  }
 }
 
 .result-card:hover {
@@ -356,7 +580,7 @@ select.glass-input option:checked {
 }
 
 .result-label {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-secondary);
   margin-bottom: 12px;
   display: flex;
@@ -367,17 +591,36 @@ select.glass-input option:checked {
   letter-spacing: 0.5px;
 }
 
+@media (min-width: 769px) {
+  .result-label {
+    font-size: 14px;
+  }
+}
+
 .result-value {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   font-family: 'JetBrains Mono', monospace;
   margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+@media (min-width: 769px) {
+  .result-value {
+    font-size: 32px;
+  }
 }
 
 .result-unit {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--text-secondary);
   margin-left: 4px;
+}
+
+@media (min-width: 769px) {
+  .result-unit {
+    font-size: 16px;
+  }
 }
 
 .unit-price .result-value {
@@ -385,6 +628,7 @@ select.glass-input option:checked {
   background: linear-gradient(135deg, var(--primary), var(--primary-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .total-price .result-value {
@@ -392,7 +636,14 @@ select.glass-input option:checked {
   background: linear-gradient(135deg, var(--secondary), #34d399);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-size: 36px;
+  background-clip: text;
+  font-size: 30px;
+}
+
+@media (min-width: 769px) {
+  .total-price .result-value {
+    font-size: 36px;
+  }
 }
 
 /* Tier Badge */
@@ -400,16 +651,25 @@ select.glass-input option:checked {
   background: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.2);
   border-radius: 12px;
-  padding: 16px 20px;
-  margin-top: 24px;
+  padding: 14px 16px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   gap: 12px;
+  font-size: 14px;
+}
+
+@media (min-width: 769px) {
+  .tier-badge {
+    padding: 16px 20px;
+    margin-top: 24px;
+    font-size: 16px;
+  }
 }
 
 .tier-badge i {
   color: var(--secondary);
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .tier-badge.warning {
@@ -424,29 +684,53 @@ select.glass-input option:checked {
 /* Tiers Table */
 .table-container {
   overflow-x: auto;
-  margin-top: 24px;
+  margin-top: 20px;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 769px) {
+  .table-container {
+    margin-top: 24px;
+  }
 }
 
 .tiers-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 500px;
 }
 
 .tiers-table th {
   background: rgba(255, 255, 255, 0.05);
-  padding: 20px;
+  padding: 16px;
   text-align: left;
   font-weight: 500;
   color: var(--text-secondary);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-size: 14px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+@media (min-width: 769px) {
+  .tiers-table th {
+    padding: 20px;
+    font-size: 14px;
+  }
 }
 
 .tiers-table td {
-  padding: 20px;
+  padding: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+}
+
+@media (min-width: 769px) {
+  .tiers-table td {
+    padding: 20px;
+    font-size: 16px;
+  }
 }
 
 .tiers-table tr:hover {
@@ -460,18 +744,25 @@ select.glass-input option:checked {
 
 .tiers-table tr.active-tier td:last-child i {
   color: var(--secondary);
-  font-size: 18px;
+  font-size: 16px;
+}
+
+@media (min-width: 769px) {
+  .tiers-table tr.active-tier td:last-child i {
+    font-size: 18px;
+  }
 }
 
 /* Cart Table */
 .cart-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px;
 }
 
 .cart-table th {
   background: rgba(255, 255, 255, 0.05);
-  padding: 16px;
+  padding: 14px;
   text-align: left;
   font-weight: 500;
   color: var(--text-secondary);
@@ -479,11 +770,26 @@ select.glass-input option:checked {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 12px;
+  white-space: nowrap;
+}
+
+@media (min-width: 769px) {
+  .cart-table th {
+    padding: 16px;
+    font-size: 12px;
+  }
 }
 
 .cart-table td {
-  padding: 16px;
+  padding: 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+}
+
+@media (min-width: 769px) {
+  .cart-table td {
+    padding: 16px;
+  }
 }
 
 .cart-table tr:hover {
@@ -492,6 +798,16 @@ select.glass-input option:checked {
 
 .cart-table .product-name {
   font-weight: 500;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 769px) {
+  .cart-table .product-name {
+    max-width: none;
+  }
 }
 
 .cart-table .product-quantity,
@@ -499,20 +815,30 @@ select.glass-input option:checked {
 .cart-table .product-total {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 500;
+  font-size: 14px;
 }
 
 .cart-table .remove-btn {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.2);
   color: var(--danger);
-  padding: 8px 16px;
-  border-radius: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
   font-size: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  -webkit-tap-highlight-color: rgba(239, 68, 68, 0.3);
+}
+
+@media (min-width: 769px) {
+  .cart-table .remove-btn {
+    padding: 8px 16px;
+    border-radius: 12px;
+  }
 }
 
 .cart-table .remove-btn:hover {
@@ -531,12 +857,19 @@ select.glass-input option:checked {
 }
 
 .spinner {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border: 4px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   border-top-color: var(--primary);
   animation: spin 1s linear infinite;
+}
+
+@media (min-width: 769px) {
+  .spinner {
+    width: 60px;
+    height: 60px;
+  }
 }
 
 @keyframes spin {
@@ -546,29 +879,41 @@ select.glass-input option:checked {
 /* Notification */
 .notification {
   position: fixed;
-  top: 32px;
-  right: 32px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
+  top: 20px;
+  right: 20px;
+  left: 20px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: 20px 24px;
-  max-width: 400px;
+  padding: 16px;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: var(--glass-shadow);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   animation: slideIn 0.3s ease forwards;
   z-index: 1000;
+  max-width: none;
+}
+
+@media (min-width: 769px) {
+  .notification {
+    top: 32px;
+    right: 32px;
+    left: auto;
+    max-width: 400px;
+    padding: 20px 24px;
+  }
 }
 
 @keyframes slideIn {
   from {
-    transform: translateX(100%);
+    transform: translateY(-20px);
     opacity: 0;
   }
   to {
-    transform: translateX(0);
+    transform: translateY(0);
     opacity: 1;
   }
 }
@@ -587,6 +932,16 @@ select.glass-input option:checked {
 
 .notification-content {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+@media (min-width: 769px) {
+  .notification-content {
+    font-size: 16px;
+  }
 }
 
 .notification-close {
@@ -596,6 +951,8 @@ select.glass-input option:checked {
   cursor: pointer;
   font-size: 16px;
   transition: color 0.3s ease;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .notification-close:hover {
@@ -605,66 +962,80 @@ select.glass-input option:checked {
 /* Footer */
 .footer {
   text-align: center;
-  margin-top: 40px;
-  padding-top: 24px;
+  margin-top: 32px;
+  padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 13px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 769px) {
+  .footer {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
 }
 
 .footer-info {
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-  
-  .footer {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .notification {
-    left: 20px;
-    right: 20px;
-    max-width: none;
-  }
-  
-  .cart-table th,
-  .cart-table td {
-    padding: 12px 8px;
-    font-size: 12px;
-  }
+  justify-content: center;
+  gap: 8px;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--primary);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary-light);
+}
+
+/* İnput type number için spinner gizleme */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Mobil dokunma efektleri */
+@media (hover: none) and (pointer: coarse) {
+  .amount-btn:hover,
+  .reset-btn:hover,
+  .quick-add-btn:hover,
+  .action-btn:hover,
+  .remove-btn:hover {
+    transform: none;
+  }
+  
+  .result-card:hover {
+    transform: none;
+  }
+  
+  .glass-panel:hover {
+    transform: none;
+  }
 }
 </style>
 
@@ -724,7 +1095,7 @@ async function loadProducts() {
   }
 }
 
-window.calculate = function () {
+function calculate() {
   if (loading) return;
   
   const productSelect = document.getElementById("product");
@@ -768,8 +1139,8 @@ window.calculate = function () {
   }
   
   // Sonuçları göster
-  document.getElementById("unitPrice").innerText = unitPrice.toFixed(2);
-  document.getElementById("total").innerText = (unitPrice * qty).toFixed(2);
+  document.getElementById("unitPrice").innerText = unitPrice > 0 ? unitPrice.toFixed(2) : "-";
+  document.getElementById("total").innerText = unitPrice > 0 ? (unitPrice * qty).toFixed(2) : "-";
   
   // Kademe bilgisini göster
   const tierInfo = document.getElementById("tierInfo");
@@ -794,7 +1165,7 @@ window.calculate = function () {
   
   // Tüm kademeleri göster
   updateTierTable(p.tiers, p.unit, qty);
-};
+}
 
 function updateTierTable(tiers, unit, currentQty) {
   const tableBody = document.getElementById("tiersTableBody");
@@ -877,6 +1248,13 @@ window.addToCart = function() {
   
   // Formu sıfırla
   document.getElementById("amount").value = "";
+  calculate();
+};
+
+// Hızlı miktar ekleme fonksiyonları
+window.quickAdd = function(amount) {
+  const amountInput = document.getElementById("amount");
+  amountInput.value = amount;
   calculate();
 };
 
@@ -1079,15 +1457,35 @@ window.resetAmount = function() {
             <i class="fas fa-redo"></i> Sıfırla
           </button>
         </div>
+        
+        <!-- Hızlı Ekleme Butonları -->
+        <div class="quick-add-section">
+          <div class="quick-add-title">
+            <i class="fas fa-bolt"></i> Hızlı Miktar Ekle
+          </div>
+          <div class="quick-add-buttons">
+            <button class="quick-add-btn" onclick="quickAdd(10)">
+              <i class="fas fa-plus-circle"></i> 10
+            </button>
+            <button class="quick-add-btn" onclick="quickAdd(50)">
+              <i class="fas fa-plus-circle"></i> 50
+            </button>
+            <button class="quick-add-btn" onclick="quickAdd(100)">
+              <i class="fas fa-plus-circle"></i> 100
+            </button>
+            <button class="quick-add-btn" onclick="quickAdd(500)">
+              <i class="fas fa-plus-circle"></i> 500
+            </button>
+            <button class="quick-add-btn" onclick="quickAdd(1000)">
+              <i class="fas fa-plus-circle"></i> 1000
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     
-    <!-- Eylem Butonları -->
-    <button class="action-btn" onclick="calculate()">
-      <i class="fas fa-calculator"></i> Hesapla
-    </button>
-    
-    <button class="action-btn secondary" onclick="addToCart()">
+    <!-- Sepete Ekle Butonu -->
+    <button class="action-btn" onclick="addToCart()">
       <i class="fas fa-cart-plus"></i> Sepete Ekle
     </button>
     
@@ -1164,7 +1562,7 @@ window.resetAmount = function() {
       <div class="results-grid" style="margin-top: 24px;">
         <div class="result-card total-price">
           <div class="result-label">
-            <i class="fas fa-receipt"></i> Ödenecek Tutar
+            <i class="fas fa-receipt"></i> Sepet Toplamı
           </div>
           <div class="result-value">
             <span id="cartTotal">0.00</span>
