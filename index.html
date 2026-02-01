@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Büro Copy – Fiyat Hesaplama</title>
+<title>Büro Copy – Tam Entegre Sistem</title>
 <!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Google Fonts -->
@@ -22,6 +22,9 @@
   --secondary: #10b981;
   --accent: #f59e0b;
   --danger: #ef4444;
+  --warning: #f97316;
+  --info: #3b82f6;
+  --success: #22c55e;
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
   --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
@@ -119,7 +122,7 @@ body::before {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   width: 100%;
 }
@@ -169,9 +172,65 @@ body::before {
 }
 
 .header-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+@media (min-width: 769px) {
+  .header-right {
+    gap: 16px;
+  }
+}
+
+.mode-switcher {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.mode-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 769px) {
+  .mode-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    gap: 8px;
+  }
+}
+
+.mode-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.mode-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+.cart-badge {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
-  padding: 12px 20px;
+  padding: 8px 16px;
   border-radius: 16px;
   font-weight: 600;
   font-size: 14px;
@@ -184,10 +243,25 @@ body::before {
 }
 
 @media (min-width: 769px) {
-  .header-right {
+  .cart-badge {
     font-size: 16px;
-    padding: 12px 24px;
+    padding: 10px 20px;
   }
+}
+
+/* Page Content */
+.page-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.page-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Glass Panel - iOS Optimize */
@@ -265,6 +339,12 @@ body::before {
   }
 }
 
+.panel-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+}
+
 /* Form Grid */
 .form-grid {
   display: grid;
@@ -278,6 +358,20 @@ body::before {
     grid-template-columns: 1fr 1fr;
     gap: 24px;
     margin-bottom: 32px;
+  }
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 769px) {
+  .form-grid-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
   }
 }
 
@@ -343,6 +437,11 @@ body::before {
   background: rgba(255, 255, 255, 0.08);
 }
 
+textarea.glass-input {
+  min-height: 100px;
+  resize: vertical;
+}
+
 /* iOS Select Düzeltmesi */
 select.glass-input {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238b5cf6' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
@@ -358,6 +457,61 @@ select.glass-input {
     background-size: 16px;
     padding-right: 50px;
   }
+}
+
+/* Customer Selection */
+.customer-selection {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 769px) {
+  .customer-selection {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.customer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.customer-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.customer-details h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.customer-details p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.customer-actions {
+  display: flex;
+  gap: 12px;
 }
 
 /* Amount Controls */
@@ -486,6 +640,33 @@ select.glass-input {
 .action-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+}
+
+.action-btn.secondary {
+  background: linear-gradient(135deg, var(--secondary), #34d399);
+}
+
+.action-btn.warning {
+  background: linear-gradient(135deg, var(--warning), #fb923c);
+}
+
+.action-btn.info {
+  background: linear-gradient(135deg, var(--info), #60a5fa);
+}
+
+.action-btn.success {
+  background: linear-gradient(135deg, var(--success), #4ade80);
+}
+
+.action-btn.danger {
+  background: linear-gradient(135deg, var(--danger), #f87171);
+}
+
+.action-btn.small {
+  padding: 10px 16px;
+  font-size: 14px;
+  width: auto;
+  margin-top: 0;
 }
 
 /* Quick Add Section */
@@ -710,7 +891,7 @@ select.glass-input {
   color: var(--accent);
 }
 
-/* Tiers Table */
+/* Table Container */
 .table-container {
   overflow-x: auto;
   margin-top: 20px;
@@ -723,13 +904,14 @@ select.glass-input {
   }
 }
 
-.tiers-table {
+/* Tiers Table */
+.tiers-table, .admin-table {
   width: 100%;
   border-collapse: collapse;
   min-width: 500px;
 }
 
-.tiers-table th {
+.tiers-table th, .admin-table th {
   background: rgba(255, 255, 255, 0.05);
   padding: 16px;
   text-align: left;
@@ -743,26 +925,26 @@ select.glass-input {
 }
 
 @media (min-width: 769px) {
-  .tiers-table th {
+  .tiers-table th, .admin-table th {
     padding: 20px;
     font-size: 14px;
   }
 }
 
-.tiers-table td {
+.tiers-table td, .admin-table td {
   padding: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 14px;
 }
 
 @media (min-width: 769px) {
-  .tiers-table td {
+  .tiers-table td, .admin-table td {
     padding: 20px;
     font-size: 16px;
   }
 }
 
-.tiers-table tr:hover {
+.tiers-table tr:hover, .admin-table tr:hover {
   background: rgba(255, 255, 255, 0.03);
 }
 
@@ -852,6 +1034,87 @@ select.glass-input {
   transform: scale(1.05);
 }
 
+/* Customers Table */
+.customers-table, .services-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.customers-table th, .services-table th {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.customers-table td, .services-table td {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+}
+
+.customer-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-active {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--secondary);
+}
+
+.status-inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+.status-regular {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--info);
+}
+
+.service-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.status-pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent);
+}
+
+.status-approved {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--secondary);
+}
+
+.status-completed {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--info);
+}
+
+.status-cancelled {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
 /* Loading Indicator */
 .loading-indicator {
   display: flex;
@@ -938,6 +1201,10 @@ select.glass-input {
   border-left: 4px solid var(--accent);
 }
 
+.notification-info {
+  border-left: 4px solid var(--info);
+}
+
 .notification-content {
   flex: 1;
   display: flex;
@@ -965,6 +1232,202 @@ select.glass-input {
 
 .notification-close:hover {
   color: var(--text-primary);
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 20px;
+  transition: color 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+/* Tier Management */
+.tier-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.tier-row input {
+  flex: 1;
+}
+
+.remove-tier-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.remove-tier-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.add-tier-btn {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: var(--secondary);
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.add-tier-btn:hover {
+  background: rgba(16, 185, 129, 0.2);
+}
+
+/* WhatsApp Preview */
+.whatsapp-preview {
+  background: rgba(37, 211, 102, 0.1);
+  border: 1px solid rgba(37, 211, 102, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.whatsapp-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(37, 211, 102, 0.2);
+}
+
+.whatsapp-preview-header i {
+  color: #25D366;
+  font-size: 24px;
+}
+
+.whatsapp-preview-content {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 769px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Footer */
@@ -998,25 +1461,21 @@ select.glass-input {
 
 /* iOS Safari için özel düzeltmeler */
 @supports (-webkit-touch-callout: none) {
-  /* Safari'de input arkaplanı */
   input, select, textarea {
     -webkit-appearance: none;
     border-radius: 14px;
   }
   
-  /* Safari'de butonlar */
   button {
     -webkit-appearance: none;
     border-radius: 16px;
   }
   
-  /* Safari'de font rendering */
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
   
-  /* Safari'de transform hack */
   .glass-panel, .result-card, .notification {
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
@@ -1040,7 +1499,8 @@ input[type="number"] {
   .reset-btn:hover,
   .quick-add-btn:hover,
   .action-btn:hover,
-  .remove-btn:hover {
+  .remove-btn:hover,
+  .mode-btn:hover {
     transform: none;
   }
   
@@ -1054,10 +1514,12 @@ input[type="number"] {
 }
 </style>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<!-- Firebase Scriptleri -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 
+<script>
+// Firebase konfigürasyonu
 const firebaseConfig = {
   apiKey: "AIzaSyAYgBx5T_7aS6IeV3f-T6KVjzZg6V5kRY0",
   authDomain: "buro-copy-fiyat-listesi.firebaseapp.com",
@@ -1067,42 +1529,103 @@ const firebaseConfig = {
   appId: "1:969205548894:web:7ff904261fb355e85771cf"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Firebase'i başlat
+let app;
+let db;
+try {
+  app = firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  console.log("Firebase başarıyla başlatıldı");
+} catch (error) {
+  console.error("Firebase başlatma hatası:", error);
+}
 
 let products = {};
 let loading = true;
-let cart = [];
+let customers = [];
+let selectedCustomer = null;
+let services = [];
+let whatsappNumber = "+905551234567"; // Buraya WhatsApp grup numarasını girin
 
+// Sayfa modlarını yönet - GLOBAL FONKSİYON
+window.switchPage = function(pageId) {
+  console.log("Sayfa değiştiriliyor:", pageId);
+  
+  // Tüm sayfaları gizle
+  document.querySelectorAll('.page-content').forEach(page => {
+    page.classList.remove('active');
+  });
+  
+  // Tüm mod butonlarını pasif yap
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Seçilen sayfayı göster
+  const pageElement = document.getElementById(pageId);
+  if (pageElement) {
+    pageElement.classList.add('active');
+  } else {
+    console.error("Sayfa elementi bulunamadı:", pageId);
+  }
+  
+  // Seçilen butonu aktif yap
+  const activeButton = document.querySelector(`.mode-btn[onclick*="${pageId}"]`);
+  if (activeButton) {
+    activeButton.classList.add('active');
+  }
+  
+  // Eğer cariler sayfasına geçiyorsak, carileri yükle
+  if (pageId === 'customers-page') {
+    loadCustomers();
+  } else if (pageId === 'services-page') {
+    loadServices();
+    updateStats();
+  } else if (pageId === 'calculator-page') {
+    // Fiyat hesaplama sayfasına geçtiğimizde, eğer seçili müşteri varsa göster
+    if (selectedCustomer) {
+      document.getElementById('selectedCustomer').style.display = 'flex';
+    }
+  }
+}
+
+// Ürünleri yükle
 async function loadProducts() {
   const select = document.getElementById("product");
   const loadingIndicator = document.getElementById("loading-indicator");
   const productSelectContainer = document.getElementById("product-select-container");
   
+  if (!select || !loadingIndicator || !productSelectContainer) {
+    console.error("Gerekli elementler bulunamadı");
+    return;
+  }
+  
   try {
     loadingIndicator.style.display = "flex";
     productSelectContainer.style.display = "none";
     
-    const snap = await getDocs(collection(db, "products"));
+    const snap = await db.collection("products").get();
     select.innerHTML = '<option value="">Ürün Seçin</option>';
+    products = {};
     
     if (snap.empty) {
       select.innerHTML = '<option value="">Kayıtlı ürün bulunamadı</option>';
       showNotification("Kayıtlı ürün bulunamadı. Lütfen önce yönetim panelinden ürün ekleyin.", "warning");
     } else {
       snap.forEach(doc => {
-        products[doc.id] = doc.data();
+        products[doc.id] = { id: doc.id, ...doc.data() };
         const opt = document.createElement("option");
         opt.value = doc.id;
         opt.textContent = `${doc.data().name} (${doc.id})`;
         opt.setAttribute("data-unit", doc.data().unit);
         select.appendChild(opt);
       });
+      console.log(`${snap.size} ürün yüklendi`);
     }
   } catch (error) {
     console.error("Ürün yükleme hatası:", error);
     select.innerHTML = '<option value="">Yükleme hatası</option>';
-    showNotification("Ürünler yüklenirken bir hata oluştu!", "error");
+    showNotification("Ürünler yüklenirken bir hata oluştu! " + error.message, "error");
   } finally {
     loadingIndicator.style.display = "none";
     productSelectContainer.style.display = "flex";
@@ -1110,8 +1633,477 @@ async function loadProducts() {
   }
 }
 
-function calculate() {
-  if (loading) return;
+// Carileri yükle
+async function loadCustomers() {
+  const tableBody = document.getElementById("customersTableBody");
+  const loadingIndicator = document.getElementById("customers-loading");
+  
+  if (!tableBody || !loadingIndicator) {
+    console.error("Cariler tablo elementleri bulunamadı");
+    return;
+  }
+  
+  try {
+    loadingIndicator.style.display = "flex";
+    tableBody.innerHTML = "";
+    
+    const snap = await db.collection("customers").orderBy("createdAt", "desc").get();
+    customers = [];
+    
+    if (snap.empty) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+            <i class="fas fa-users"></i> Kayıtlı cari bulunamadı
+          </td>
+        </tr>
+      `;
+    } else {
+      snap.forEach(doc => {
+        const customer = { id: doc.id, ...doc.data() };
+        customers.push(customer);
+        
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>
+            <div class="customer-info">
+              <div class="customer-avatar">
+                ${customer.name.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <div style="font-weight: 500;">${customer.name}</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">${customer.company || ''}</div>
+              </div>
+            </div>
+          </td>
+          <td>${customer.phone || '-'}</td>
+          <td>${customer.email || '-'}</td>
+          <td>${customer.taxNumber || '-'}</td>
+          <td>
+            <span class="customer-status ${customer.status === 'active' ? 'status-active' : customer.status === 'inactive' ? 'status-inactive' : 'status-regular'}">
+              <i class="fas fa-circle"></i>
+              ${customer.status === 'active' ? 'Aktif' : customer.status === 'inactive' ? 'Pasif' : 'Düzenli'}
+            </span>
+          </td>
+          <td>${formatDate(customer.createdAt?.toDate())}</td>
+          <td>
+            <div style="display: flex; gap: 8px;">
+              <button class="remove-btn" style="background: rgba(37, 211, 102, 0.1); border-color: rgba(37, 211, 102, 0.2); color: #25D366;" onclick="addServiceForCustomer('${doc.id}')">
+                <i class="fab fa-whatsapp"></i> Hizmet Ekle
+              </button>
+              <button class="remove-btn" style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); color: var(--info);" onclick="selectCustomer('${doc.id}')">
+                <i class="fas fa-check"></i> Seç
+              </button>
+              <button class="remove-btn" onclick="editCustomer('${doc.id}')">
+                <i class="fas fa-edit"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      console.log(`${snap.size} cari yüklendi`);
+    }
+  } catch (error) {
+    console.error("Cari yükleme hatası:", error);
+    showNotification("Cariler yüklenirken bir hata oluştu! " + error.message, "error");
+  } finally {
+    loadingIndicator.style.display = "none";
+  }
+}
+
+// Hizmetleri yükle
+async function loadServices() {
+  const tableBody = document.getElementById("servicesTableBody");
+  const loadingIndicator = document.getElementById("services-loading");
+  
+  if (!tableBody || !loadingIndicator) {
+    console.error("Hizmetler tablo elementleri bulunamadı");
+    return;
+  }
+  
+  try {
+    loadingIndicator.style.display = "flex";
+    tableBody.innerHTML = "";
+    
+    const snap = await db.collection("services").orderBy("createdAt", "desc").get();
+    services = [];
+    
+    if (snap.empty) {
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="9" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+            <i class="fas fa-concierge-bell"></i> Kayıtlı hizmet bulunamadı
+          </td>
+        </tr>
+      `;
+    } else {
+      snap.forEach(doc => {
+        const service = { id: doc.id, ...doc.data() };
+        services.push(service);
+        
+        const totalPrice = service.quantity * service.unitPrice;
+        
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${formatDate(service.createdAt?.toDate())}</td>
+          <td>
+            <div style="font-weight: 500;">${service.customerName}</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">${service.company || ''}</div>
+          </td>
+          <td>${service.productName}</td>
+          <td>${service.quantity} ${service.unit}</td>
+          <td>${service.unitPrice.toFixed(2)} ₺</td>
+          <td>${totalPrice.toFixed(2)} ₺</td>
+          <td>
+            <span class="service-status ${service.status === 'pending' ? 'status-pending' : 
+                                          service.status === 'approved' ? 'status-approved' : 
+                                          service.status === 'completed' ? 'status-completed' : 'status-cancelled'}">
+              <i class="fas fa-circle"></i>
+              ${service.status === 'pending' ? 'Bekliyor' : 
+               service.status === 'approved' ? 'Onaylandı' : 
+               service.status === 'completed' ? 'Tamamlandı' : 'İptal Edildi'}
+            </span>
+          </td>
+          <td>${service.notes || '-'}</td>
+          <td>
+            <div style="display: flex; gap: 8px;">
+              <button class="remove-btn" style="background: rgba(37, 211, 102, 0.1); border-color: rgba(37, 211, 102, 0.2); color: #25D366;" onclick="sendWhatsAppReminder('${doc.id}')">
+                <i class="fab fa-whatsapp"></i>
+              </button>
+              <button class="remove-btn" style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); color: var(--info);" onclick="editService('${doc.id}')">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="remove-btn" onclick="deleteService('${doc.id}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      console.log(`${snap.size} hizmet yüklendi`);
+    }
+  } catch (error) {
+    console.error("Hizmet yükleme hatası:", error);
+    showNotification("Hizmetler yüklenirken bir hata oluştu! " + error.message, "error");
+  } finally {
+    loadingIndicator.style.display = "none";
+  }
+}
+
+// İstatistikleri güncelle
+async function updateStats() {
+  try {
+    const servicesSnap = await db.collection("services").get();
+    const customersSnap = await db.collection("customers").get();
+    const productsSnap = await db.collection("products").get();
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const todayServices = servicesSnap.docs.filter(doc => {
+      const date = doc.data().createdAt?.toDate();
+      return date && date >= today;
+    });
+    
+    const pendingServices = servicesSnap.docs.filter(doc => 
+      doc.data().status === 'pending'
+    );
+    
+    const totalRevenue = servicesSnap.docs.reduce((sum, doc) => {
+      const service = doc.data();
+      return sum + (service.quantity * service.unitPrice);
+    }, 0);
+    
+    document.getElementById('totalCustomers').textContent = customersSnap.size;
+    document.getElementById('totalServices').textContent = servicesSnap.size;
+    document.getElementById('todayServices').textContent = todayServices.length;
+    document.getElementById('pendingServices').textContent = pendingServices.length;
+    document.getElementById('totalProducts').textContent = productsSnap.size;
+    document.getElementById('totalRevenue').textContent = totalRevenue.toFixed(2);
+    
+  } catch (error) {
+    console.error("İstatistik güncelleme hatası:", error);
+  }
+}
+
+// Cari seç - GLOBAL FONKSİYON
+window.selectCustomer = function(customerId) {
+  selectedCustomer = customers.find(c => c.id === customerId);
+  
+  if (selectedCustomer) {
+    document.getElementById('selectedCustomer').style.display = 'flex';
+    document.getElementById('customerName').textContent = selectedCustomer.name;
+    document.getElementById('customerCompany').textContent = selectedCustomer.company ? ` | ${selectedCustomer.company}` : '';
+    document.getElementById('customerContact').textContent = selectedCustomer.phone || selectedCustomer.email || '';
+    
+    // Fiyat hesaplama sayfasına geç
+    window.switchPage('calculator-page');
+    
+    showNotification(`${selectedCustomer.name} cari olarak seçildi`, "success");
+  }
+}
+
+// Hizmet ekleme modalını aç (belirli bir cari için)
+window.addServiceForCustomer = function(customerId) {
+  const customer = customers.find(c => c.id === customerId);
+  if (!customer) {
+    showNotification("Cari bulunamadı!", "error");
+    return;
+  }
+  
+  selectedCustomer = customer;
+  document.getElementById('serviceCustomerId').value = customerId;
+  document.getElementById('serviceCustomerName').value = customer.name;
+  document.getElementById('serviceCustomerCompany').value = customer.company || '';
+  document.getElementById('serviceCustomerPhone').value = customer.phone || '';
+  
+  // Modalı aç
+  window.openModal('serviceModal');
+  
+  // WhatsApp önizlemesini güncelle
+  updateWhatsAppPreview();
+}
+
+// Cari ekle
+async function addCustomer(customerData) {
+  try {
+    const customerWithTimestamp = {
+      ...customerData,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      status: 'active'
+    };
+    
+    await db.collection("customers").add(customerWithTimestamp);
+    showNotification("Cari başarıyla eklendi!", "success");
+    window.closeModal('customerModal');
+    loadCustomers();
+    updateStats();
+  } catch (error) {
+    console.error("Cari ekleme hatası:", error);
+    showNotification("Cari eklenirken bir hata oluştu! " + error.message, "error");
+  }
+}
+
+// Cari düzenle
+async function updateCustomer(customerId, customerData) {
+  try {
+    const customerRef = db.collection("customers").doc(customerId);
+    await customerRef.update(customerData);
+    showNotification("Cari başarıyla güncellendi!", "success");
+    window.closeModal('customerModal');
+    loadCustomers();
+  } catch (error) {
+    console.error("Cari güncelleme hatası:", error);
+    showNotification("Cari güncellenirken bir hata oluştu! " + error.message, "error");
+  }
+}
+
+// Hizmet ekle
+async function addService(serviceData) {
+  try {
+    // Fiyat hesapla
+    const product = products[serviceData.productId];
+    let unitPrice = 0;
+    
+    if (product && product.tiers) {
+      const sortedTiers = [...product.tiers].sort((a, b) => b.min - a.min);
+      for (const tier of sortedTiers) {
+        if (serviceData.quantity >= tier.min) {
+          unitPrice = tier.price;
+          break;
+        }
+      }
+    }
+    
+    if (unitPrice === 0) {
+      showNotification("Bu miktar için uygun fiyat kademesi bulunamadı!", "error");
+      return;
+    }
+    
+    const totalPrice = serviceData.quantity * unitPrice;
+    
+    const serviceWithTimestamp = {
+      ...serviceData,
+      unitPrice: unitPrice,
+      totalPrice: totalPrice,
+      productName: product.name,
+      unit: product.unit,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      status: 'pending',
+      customerId: selectedCustomer?.id || serviceData.customerId
+    };
+    
+    // Hizmeti kaydet
+    await db.collection("services").add(serviceWithTimestamp);
+    
+    // WhatsApp mesajı gönder
+    await sendWhatsAppMessage(serviceWithTimestamp);
+    
+    showNotification("Hizmet başarıyla kaydedildi ve WhatsApp'a gönderildi!", "success");
+    
+    window.closeModal('serviceModal');
+    loadServices();
+    updateStats();
+    
+  } catch (error) {
+    console.error("Hizmet ekleme hatası:", error);
+    showNotification("Hizmet eklenirken bir hata oluştu! " + error.message, "error");
+  }
+}
+
+// Hizmet düzenle
+async function updateService(serviceId, serviceData) {
+  try {
+    const serviceRef = db.collection("services").doc(serviceId);
+    await serviceRef.update(serviceData);
+    showNotification("Hizmet başarıyla güncellendi!", "success");
+    window.closeModal('serviceModal');
+    loadServices();
+  } catch (error) {
+    console.error("Hizmet güncelleme hatası:", error);
+    showNotification("Hizmet güncellenirken bir hata oluştu! " + error.message, "error");
+  }
+}
+
+// Hizmet sil
+window.deleteService = async function(serviceId) {
+  if (confirm("Bu hizmeti silmek istediğinize emin misiniz? Bu işlem geri alınamaz.")) {
+    try {
+      await db.collection("services").doc(serviceId).delete();
+      showNotification("Hizmet başarıyla silindi!", "success");
+      loadServices();
+      updateStats();
+    } catch (error) {
+      console.error("Hizmet silme hatası:", error);
+      showNotification("Hizmet silinirken bir hata oluştu! " + error.message, "error");
+    }
+  }
+}
+
+// WhatsApp mesajı gönder
+async function sendWhatsAppMessage(serviceData) {
+  try {
+    const message = `📋 YENİ HİZMET TALEBİ\n\n` +
+                   `🏢 Firma: ${serviceData.customerName}\n` +
+                   (serviceData.company ? `📌 Şirket: ${serviceData.company}\n` : '') +
+                   `📦 Ürün: ${serviceData.productName}\n` +
+                   `📊 Miktar: ${serviceData.quantity} ${serviceData.unit}\n` +
+                   `💰 Birim Fiyat: ${serviceData.unitPrice.toFixed(2)} ₺\n` +
+                   `🧾 Toplam Tutar: ${serviceData.totalPrice.toFixed(2)} ₺\n` +
+                   (serviceData.notes ? `📝 Notlar: ${serviceData.notes}\n` : '') +
+                   `⏰ Talep Tarihi: ${formatDate(serviceData.createdAt?.toDate())}\n` +
+                   `🔗 Durum: ${serviceData.status === 'pending' ? 'BEKLİYOR' : 'ONAYLANDI'}\n\n` +
+                   `📍 Büro Copy`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    
+    // Yeni sekmede aç
+    window.open(whatsappUrl, '_blank');
+    
+    return true;
+  } catch (error) {
+    console.error("WhatsApp mesajı gönderme hatası:", error);
+    return false;
+  }
+}
+
+// WhatsApp hatırlatma gönder
+window.sendWhatsAppReminder = async function(serviceId) {
+  const service = services.find(s => s.id === serviceId);
+  if (!service) return;
+  
+  const message = `🔔 HİZMET HATIRLATMA\n\n` +
+                 `🏢 Firma: ${service.customerName}\n` +
+                 `📦 Ürün: ${service.productName}\n` +
+                 `📊 Miktar: ${service.quantity} ${service.unit}\n` +
+                 `💰 Toplam: ${(service.quantity * service.unitPrice).toFixed(2)} ₺\n` +
+                 `⏰ Talep Tarihi: ${formatDate(service.createdAt?.toDate())}\n` +
+                 `📌 Durum: ${service.status === 'pending' ? 'HALA BEKLİYOR' : service.status === 'approved' ? 'ONAYLANDI' : 'TAMAMLANDI'}\n\n` +
+                 `📍 Büro Copy - Lütfen durumu kontrol edin.`;
+  
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+  
+  window.open(whatsappUrl, '_blank');
+}
+
+// WhatsApp önizlemesini güncelle
+function updateWhatsAppPreview() {
+  const productSelect = document.getElementById('serviceProduct');
+  const quantityInput = document.getElementById('serviceQuantity');
+  const notesInput = document.getElementById('serviceNotes');
+  const previewElement = document.getElementById('whatsappPreviewContent');
+  
+  if (!productSelect || !quantityInput || !previewElement) {
+    console.error("WhatsApp önizleme elementleri bulunamadı");
+    return;
+  }
+  
+  if (!productSelect.value || !quantityInput.value) {
+    previewElement.textContent = 'Ürün ve miktar seçerek önizlemeyi görüntüleyin.';
+    return;
+  }
+  
+  const product = products[productSelect.value];
+  const quantity = parseInt(quantityInput.value) || 0;
+  
+  if (!product) {
+    previewElement.textContent = 'Ürün bulunamadı.';
+    return;
+  }
+  
+  // Fiyat hesapla
+  let unitPrice = 0;
+  if (product.tiers) {
+    const sortedTiers = [...product.tiers].sort((a, b) => b.min - a.min);
+    for (const tier of sortedTiers) {
+      if (quantity >= tier.min) {
+        unitPrice = tier.price;
+        break;
+      }
+    }
+  }
+  
+  const totalPrice = quantity * unitPrice;
+  const customerName = document.getElementById('serviceCustomerName').value;
+  const company = document.getElementById('serviceCustomerCompany').value;
+  
+  const preview = `📋 YENİ HİZMET TALEBİ\n\n` +
+                 `🏢 Firma: ${customerName || 'Müşteri'}\n` +
+                 (company ? `📌 Şirket: ${company}\n` : '') +
+                 `📦 Ürün: ${product.name}\n` +
+                 `📊 Miktar: ${quantity} ${product.unit}\n` +
+                 `💰 Birim Fiyat: ${unitPrice.toFixed(2)} ₺\n` +
+                 `🧾 Toplam Tutar: ${totalPrice.toFixed(2)} ₺\n` +
+                 (notesInput.value ? `📝 Notlar: ${notesInput.value}\n` : '') +
+                 `⏰ Talep Tarihi: ${formatDate(new Date())}\n` +
+                 `🔗 Durum: BEKLİYOR\n\n` +
+                 `📍 Büro Copy`;
+  
+  previewElement.textContent = preview;
+}
+
+// Tarih formatlama
+function formatDate(date) {
+  if (!date) return '-';
+  return date.toLocaleDateString('tr-TR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+// Hesaplama fonksiyonu - GLOBAL
+window.calculate = function() {
+  if (loading) {
+    showNotification("Ürünler henüz yüklenmedi, lütfen bekleyin...", "warning");
+    return;
+  }
   
   const productSelect = document.getElementById("product");
   const selectedProduct = productSelect.value;
@@ -1184,6 +2176,11 @@ function calculate() {
 
 function updateTierTable(tiers, unit, currentQty) {
   const tableBody = document.getElementById("tiersTableBody");
+  if (!tableBody) {
+    console.error("Tier tablo body bulunamadı");
+    return;
+  }
+  
   tableBody.innerHTML = "";
   
   if (!tiers || tiers.length === 0) {
@@ -1214,143 +2211,158 @@ function updateTierTable(tiers, unit, currentQty) {
   });
 }
 
-// Sepete ürün ekleme fonksiyonu
-window.addToCart = function() {
-  if (loading) {
-    showNotification("Ürünler yükleniyor, lütfen bekleyin...", "warning");
+// Kademe ekleme (ürün modalında) - GLOBAL
+window.addTierRow = function() {
+  const container = document.getElementById('tiersContainer');
+  if (!container) {
+    console.error("Tiers container bulunamadı");
     return;
   }
   
-  const productSelect = document.getElementById("product");
-  const selectedProduct = productSelect.value;
-  const p = products[selectedProduct];
-  const qty = Number(document.getElementById("amount").value);
-  
-  if (!p || !qty || qty <= 0) {
-    showNotification("Lütfen geçerli bir ürün ve miktar seçin!", "warning");
-    return;
-  }
-  
-  // Birim fiyatı hesapla
-  let unitPrice = 0;
-  const sortedTiers = [...p.tiers].sort((a, b) => b.min - a.min);
-  for (const tier of sortedTiers) {
-    if (qty >= tier.min) {
-      unitPrice = tier.price;
-      break;
-    }
-  }
-  
-  if (unitPrice === 0) {
-    showNotification("Bu miktar için uygun kademe bulunamadı!", "error");
-    return;
-  }
-  
-  // Sepete ekle
-  const cartItem = {
-    id: selectedProduct,
-    name: p.name,
-    quantity: qty,
-    unit: p.unit,
-    unitPrice: unitPrice,
-    total: unitPrice * qty,
-    timestamp: Date.now()
-  };
-  
-  cart.push(cartItem);
-  updateCartDisplay();
-  showNotification(`${p.name} sepete eklendi!`, "success");
-  
-  // Formu sıfırla
-  document.getElementById("amount").value = "";
-  calculate();
-};
-
-// Hızlı miktar ekleme fonksiyonları
-window.quickAdd = function(amount) {
-  const amountInput = document.getElementById("amount");
-  amountInput.value = amount;
-  calculate();
-};
-
-// Sepet göstergesini güncelle
-function updateCartDisplay() {
-  const cartTableBody = document.getElementById("cartTableBody");
-  const cartTotalElement = document.getElementById("cartTotal");
-  const cartCountElement = document.getElementById("cartCount");
-  const cartPanel = document.getElementById("cartPanel");
-  
-  if (cart.length === 0) {
-    cartTableBody.innerHTML = `
-      <tr>
-        <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-secondary);">
-          <i class="fas fa-shopping-cart"></i> Sepetiniz boş
-        </td>
-      </tr>
-    `;
-    cartTotalElement.innerText = "0.00";
-    cartCountElement.innerText = "0";
-    cartPanel.style.display = "none";
-    return;
-  }
-  
-  // Sepet panelini göster
-  cartPanel.style.display = "block";
-  
-  // Sepet sayacını güncelle
-  cartCountElement.innerText = cart.length;
-  
-  // Toplam tutarı hesapla
-  let total = 0;
-  
-  // Tabloyu güncelle
-  cartTableBody.innerHTML = "";
-  cart.forEach((item, index) => {
-    total += item.total;
-    
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td class="product-name">${item.name}</td>
-      <td class="product-quantity">${item.quantity} ${item.unit}</td>
-      <td class="product-unit-price">${item.unitPrice.toFixed(2)} ₺</td>
-      <td class="product-total">${item.total.toFixed(2)} ₺</td>
-      <td>
-        <button class="remove-btn" onclick="removeFromCart(${index})">
-          <i class="fas fa-trash"></i> Sil
-        </button>
-      </td>
-    `;
-    cartTableBody.appendChild(row);
-  });
-  
-  // Toplam tutarı güncelle
-  cartTotalElement.innerText = total.toFixed(2);
+  const row = document.createElement('div');
+  row.className = 'tier-row';
+  row.innerHTML = `
+    <input type="number" class="glass-input" placeholder="Minimum miktar" min="1" required>
+    <input type="number" class="glass-input" placeholder="Fiyat" min="0" step="0.01" required>
+    <button type="button" class="remove-tier-btn" onclick="this.parentElement.remove()">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  container.appendChild(row);
 }
 
-// Sepetten ürün çıkarma
-window.removeFromCart = function(index) {
-  if (index >= 0 && index < cart.length) {
-    const removedItem = cart[index];
-    cart.splice(index, 1);
-    updateCartDisplay();
-    showNotification(`${removedItem.name} sepetten çıkarıldı!`, "success");
-  }
-};
-
-// Sepeti tamamen temizle
-window.clearCart = function() {
-  if (cart.length === 0) {
-    showNotification("Sepetiniz zaten boş!", "warning");
+// Modal açma - GLOBAL
+window.openModal = function(modalId, id = null) {
+  const modal = document.getElementById(modalId);
+  if (!modal) {
+    console.error("Modal bulunamadı:", modalId);
     return;
   }
   
-  if (confirm("Sepeti tamamen temizlemek istediğinize emin misiniz?")) {
-    cart = [];
-    updateCartDisplay();
-    showNotification("Sepet temizlendi!", "success");
+  modal.classList.add('active');
+  
+  if (modalId === 'customerModal' && id) {
+    const customer = customers.find(c => c.id === id);
+    if (customer) {
+      document.getElementById('customerFormTitle').textContent = 'Cari Düzenle';
+      document.getElementById('customerId').value = id;
+      document.getElementById('customerNameInput').value = customer.name;
+      document.getElementById('customerCompany').value = customer.company || '';
+      document.getElementById('customerPhone').value = customer.phone || '';
+      document.getElementById('customerEmail').value = customer.email || '';
+      document.getElementById('customerTaxNumber').value = customer.taxNumber || '';
+      document.getElementById('customerAddress').value = customer.address || '';
+      document.getElementById('customerStatus').value = customer.status || 'active';
+    }
+  } else if (modalId === 'serviceModal') {
+    document.getElementById('serviceFormTitle').textContent = 'Yeni Hizmet Ekle';
+    document.getElementById('serviceId').value = '';
+    document.getElementById('serviceQuantity').value = '';
+    document.getElementById('serviceNotes').value = '';
+    
+    // Ürün listesini doldur
+    const productSelect = document.getElementById('serviceProduct');
+    if (productSelect) {
+      productSelect.innerHTML = '<option value="">Ürün Seçin</option>';
+      for (const [id, product] of Object.entries(products)) {
+        const opt = document.createElement("option");
+        opt.value = id;
+        opt.textContent = `${product.name} (${id})`;
+        productSelect.appendChild(opt);
+      }
+    }
+    
+    updateWhatsAppPreview();
   }
 };
 
+// Modal kapama - GLOBAL
+window.closeModal = function(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('active');
+  }
+};
+
+// Cari formu gönder - GLOBAL
+window.submitCustomerForm = async function(event) {
+  event.preventDefault();
+  
+  const formData = {
+    name: document.getElementById('customerNameInput').value,
+    company: document.getElementById('customerCompany').value,
+    phone: document.getElementById('customerPhone').value,
+    email: document.getElementById('customerEmail').value,
+    taxNumber: document.getElementById('customerTaxNumber').value,
+    address: document.getElementById('customerAddress').value,
+    status: document.getElementById('customerStatus').value,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+  
+  const customerId = document.getElementById('customerId').value;
+  
+  if (customerId) {
+    await updateCustomer(customerId, formData);
+  } else {
+    await addCustomer(formData);
+  }
+};
+
+// Hizmet formu gönder - GLOBAL
+window.submitServiceForm = async function(event) {
+  event.preventDefault();
+  
+  const formData = {
+    productId: document.getElementById('serviceProduct').value,
+    quantity: parseInt(document.getElementById('serviceQuantity').value),
+    notes: document.getElementById('serviceNotes').value,
+    customerName: document.getElementById('serviceCustomerName').value,
+    company: document.getElementById('serviceCustomerCompany').value,
+    customerPhone: document.getElementById('serviceCustomerPhone').value,
+    customerId: document.getElementById('serviceCustomerId').value
+  };
+  
+  const serviceId = document.getElementById('serviceId').value;
+  
+  if (serviceId) {
+    await updateService(serviceId, formData);
+  } else {
+    await addService(formData);
+  }
+};
+
+// Cari seçimini temizle - GLOBAL
+window.clearCustomerSelection = function() {
+  selectedCustomer = null;
+  const selectedCustomerElement = document.getElementById('selectedCustomer');
+  if (selectedCustomerElement) {
+    selectedCustomerElement.style.display = 'none';
+  }
+  showNotification("Cari seçimi temizlendi", "success");
+};
+
+// WhatsApp numarasını güncelle - GLOBAL
+window.updateWhatsAppNumber = function() {
+  const newNumber = document.getElementById('whatsappNumberInput').value;
+  if (newNumber) {
+    whatsappNumber = newNumber;
+    showNotification("WhatsApp numarası güncellendi!", "success");
+    window.closeModal('settingsModal');
+  }
+};
+
+// Cari düzenleme fonksiyonu - GLOBAL
+window.editCustomer = function(customerId) {
+  window.openModal('customerModal', customerId);
+};
+
+// Hizmet düzenleme fonksiyonu - GLOBAL
+window.editService = function(serviceId) {
+  // Bu fonksiyonu ihtiyaca göre doldurmanız gerekebilir
+  showNotification("Bu özellik henüz implemente edilmedi", "info");
+};
+
+// Bildirim göster
 function showNotification(message, type) {
   const existingNotifications = document.querySelectorAll(".notification");
   existingNotifications.forEach(notification => {
@@ -1361,7 +2373,7 @@ function showNotification(message, type) {
   notification.className = `notification notification-${type}`;
   notification.innerHTML = `
     <div class="notification-content">
-      <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
+      <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
       <span>${message}</span>
     </div>
     <button class="notification-close" onclick="this.parentElement.remove()">
@@ -1378,29 +2390,12 @@ function showNotification(message, type) {
   }, 5000);
 }
 
-// Sayfa yüklendiğinde ürünleri yükle
-window.onload = function() {
-  loadProducts();
-  
-  // Miktar alanına otomatik hesaplama ekle
-  document.getElementById("amount").addEventListener("input", calculate);
-  document.getElementById("product").addEventListener("change", function() {
-    calculate();
-    
-    // Seçilen ürünün birimini al ve miktar placeholder'ını güncelle
-    const selectedOption = this.options[this.selectedIndex];
-    const unit = selectedOption.getAttribute("data-unit") || "adet";
-    document.getElementById("amount").placeholder = `Miktar (${unit} cinsinden)`;
-    document.getElementById("unitDisplay2").innerText = unit;
-  });
-};
-
-// Miktarı artır/azalt butonları
+// Miktarı artır/azalt - GLOBAL
 window.incrementAmount = function() {
   const amountInput = document.getElementById("amount");
   let currentValue = parseInt(amountInput.value) || 0;
   amountInput.value = currentValue + 1;
-  calculate();
+  window.calculate();
 };
 
 window.decrementAmount = function() {
@@ -1408,15 +2403,82 @@ window.decrementAmount = function() {
   let currentValue = parseInt(amountInput.value) || 0;
   if (currentValue > 1) {
     amountInput.value = currentValue - 1;
-    calculate();
+    window.calculate();
   }
 };
 
-// Miktarı sıfırla
+// Miktarı sıfırla - GLOBAL
 window.resetAmount = function() {
   document.getElementById("amount").value = "";
-  calculate();
+  window.calculate();
 };
+
+// Hızlı miktar ekleme - GLOBAL
+window.quickAdd = function(amount) {
+  const amountInput = document.getElementById("amount");
+  amountInput.value = amount;
+  window.calculate();
+};
+
+// Sayfa yüklendiğinde
+window.onload = async function() {
+  console.log("Sayfa yükleniyor...");
+  
+  // Firebase bağlantısını kontrol et
+  if (!db) {
+    showNotification("Firebase bağlantısı kurulamadı! Lütfen konsolu kontrol edin.", "error");
+    return;
+  }
+  
+  // Ürünleri yükle
+  await loadProducts();
+  
+  // Miktar alanına otomatik hesaplama ekle
+  const amountInput = document.getElementById("amount");
+  const productSelect = document.getElementById("product");
+  
+  if (amountInput) {
+    amountInput.addEventListener("input", window.calculate);
+  }
+  
+  if (productSelect) {
+    productSelect.addEventListener("change", function() {
+      window.calculate();
+      
+      // Seçilen ürünün birimini al ve miktar placeholder'ını güncelle
+      const selectedOption = this.options[this.selectedIndex];
+      const unit = selectedOption.getAttribute("data-unit") || "adet";
+      document.getElementById("amount").placeholder = `Miktar (${unit} cinsinden)`;
+      document.getElementById("unitDisplay2").innerText = unit;
+    });
+  }
+  
+  // Hizmet formu dinleyicileri
+  const serviceProduct = document.getElementById('serviceProduct');
+  const serviceQuantity = document.getElementById('serviceQuantity');
+  const serviceNotes = document.getElementById('serviceNotes');
+  
+  if (serviceProduct) {
+    serviceProduct.addEventListener('change', updateWhatsAppPreview);
+  }
+  if (serviceQuantity) {
+    serviceQuantity.addEventListener('input', updateWhatsAppPreview);
+  }
+  if (serviceNotes) {
+    serviceNotes.addEventListener('input', updateWhatsAppPreview);
+  }
+  
+  // Varsayılan olarak hizmetler sayfasını göster
+  window.switchPage('services-page');
+  
+  console.log("Sayfa yükleme tamamlandı");
+};
+
+// Hata yakalama
+window.addEventListener('error', function(event) {
+  console.error("Global hata:", event.error);
+  showNotification("Bir hata oluştu: " + event.error.message, "error");
+});
 </script>
 </head>
 <body>
@@ -1424,193 +2486,454 @@ window.resetAmount = function() {
   <!-- Başlık -->
   <div class="header">
     <div class="header-left">
-      <h1>Fiyat Hesaplama Paneli</h1>
-      <p>Hızlı ve kolay fiyat hesaplama aracı</p>
+      <h1>Büro Copy Entegre Sistem</h1>
+      <p>Hizmet Takibi • Fiyat Hesaplama • WhatsApp Bildirim</p>
     </div>
     <div class="header-right">
-      <i class="fas fa-calculator"></i>
-      <span>HESAPLAMA</span>
-      <span id="cartCount" style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 14px;">0</span>
+      <div class="mode-switcher">
+        <button class="mode-btn" onclick="switchPage('services-page')">
+          <i class="fas fa-concierge-bell"></i> Hizmetler
+        </button>
+        <button class="mode-btn" onclick="switchPage('customers-page')">
+          <i class="fas fa-users"></i> Cariler
+        </button>
+        <button class="mode-btn" onclick="switchPage('calculator-page')">
+          <i class="fas fa-calculator"></i> Hesaplama
+        </button>
+      </div>
+      <button class="action-btn small" onclick="openModal('settingsModal')">
+        <i class="fas fa-whatsapp"></i> WhatsApp
+      </button>
     </div>
   </div>
   
-  <!-- Hesaplama Paneli -->
-  <div class="glass-panel">
-    <div class="panel-header">
-      <i class="fas fa-search-dollar"></i>
-      <h2>Fiyat Hesapla</h2>
-    </div>
-    
-    <!-- Ürün Seçimi -->
-    <div class="form-grid">
-      <div class="form-group">
-        <label class="form-label"><i class="fas fa-box"></i> Ürün Seçimi*</label>
-        <div id="loading-indicator" class="loading-indicator">
-          <div class="spinner"></div>
-          <span>Ürünler yükleniyor...</span>
-        </div>
-        <div id="product-select-container" style="display: none;">
-          <select id="product" class="glass-input">
-            <option value="">Ürün Seçin</option>
-          </select>
-        </div>
+  <!-- Seçili Cari Bilgisi -->
+  <div class="customer-selection" id="selectedCustomer" style="display: none;">
+    <div class="customer-info">
+      <div class="customer-avatar">
+        <i class="fas fa-user"></i>
       </div>
-      
-      <div class="form-group">
-        <label class="form-label"><i class="fas fa-hashtag"></i> Miktar*</label>
-        <div class="amount-controls">
-          <div class="amount-input-container">
-            <button class="amount-btn" onclick="decrementAmount()">
-              <i class="fas fa-minus"></i>
-            </button>
-            <input type="number" id="amount" class="glass-input" placeholder="Miktar girin" min="1">
-            <button class="amount-btn" onclick="incrementAmount()">
-              <i class="fas fa-plus"></i>
-            </button>
-          </div>
-          <button class="reset-btn" onclick="resetAmount()">
-            <i class="fas fa-redo"></i> Sıfırla
+      <div class="customer-details">
+        <h3 id="customerName"></h3>
+        <p id="customerCompany"></p>
+        <p id="customerContact"></p>
+      </div>
+    </div>
+    <div class="customer-actions">
+      <button class="reset-btn" onclick="clearCustomerSelection()">
+        <i class="fas fa-times"></i> Cariyi Temizle
+      </button>
+      <button class="action-btn small info" onclick="addServiceForCustomer(selectedCustomer.id)">
+        <i class="fab fa-whatsapp"></i> Hizmet Ekle
+      </button>
+    </div>
+  </div>
+  
+  <!-- HİZMETLER SAYFASI -->
+  <div id="services-page" class="page-content active">
+    <div class="glass-panel">
+      <div class="panel-header">
+        <i class="fas fa-concierge-bell"></i>
+        <h2>Hizmet Takip Paneli</h2>
+        <div class="panel-actions">
+          <button class="action-btn small success" onclick="openModal('serviceModal')">
+            <i class="fas fa-plus"></i> Yeni Hizmet
           </button>
         </div>
-        
-        <!-- Hızlı Ekleme Butonları -->
-        <div class="quick-add-section">
-          <div class="quick-add-title">
-            <i class="fas fa-bolt"></i> Hızlı Miktar Ekle
-          </div>
-          <div class="quick-add-buttons">
-            <button class="quick-add-btn" onclick="quickAdd(10)">
-              <i class="fas fa-plus-circle"></i> 10
-            </button>
-            <button class="quick-add-btn" onclick="quickAdd(50)">
-              <i class="fas fa-plus-circle"></i> 50
-            </button>
-            <button class="quick-add-btn" onclick="quickAdd(100)">
-              <i class="fas fa-plus-circle"></i> 100
-            </button>
-            <button class="quick-add-btn" onclick="quickAdd(500)">
-              <i class="fas fa-plus-circle"></i> 500
-            </button>
-            <button class="quick-add-btn" onclick="quickAdd(1000)">
-              <i class="fas fa-plus-circle"></i> 1000
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Sepete Ekle Butonu -->
-    <button class="action-btn" onclick="addToCart()">
-      <i class="fas fa-cart-plus"></i> Sepete Ekle
-    </button>
-    
-    <!-- Hesaplama Sonuçları -->
-    <div class="glass-panel results-panel">
-      <div class="panel-header">
-        <i class="fas fa-chart-line"></i>
-        <h2>Hesaplama Sonuçları</h2>
       </div>
       
-      <div class="results-grid">
-        <div class="result-card unit-price">
-          <div class="result-label">
-            <i class="fas fa-tag"></i> Birim Fiyat
-          </div>
-          <div class="result-value">
-            <span id="unitPrice">-</span>
-            <span class="result-unit">₺ / <span id="unitDisplay">-</span></span>
-          </div>
+      <!-- İstatistikler -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalCustomers">0</div>
+          <div class="stat-label">Toplam Cari</div>
         </div>
-        
-        <div class="result-card">
-          <div class="result-label">
-            <i class="fas fa-cube"></i> Miktar
-          </div>
-          <div class="result-value">
-            <span id="amountDisplay">-</span>
-            <span class="result-unit" id="unitDisplay2">-</span>
-          </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalServices">0</div>
+          <div class="stat-label">Toplam Hizmet</div>
         </div>
-        
-        <div class="result-card total-price">
-          <div class="result-label">
-            <i class="fas fa-receipt"></i> Toplam Tutar
-          </div>
-          <div class="result-value">
-            <span id="total">-</span>
-            <span class="result-unit">₺</span>
-          </div>
+        <div class="stat-card">
+          <div class="stat-value" id="todayServices">0</div>
+          <div class="stat-label">Bugünkü Hizmet</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="pendingServices">0</div>
+          <div class="stat-label">Bekleyen Hizmet</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalProducts">0</div>
+          <div class="stat-label">Toplam Ürün</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalRevenue">0.00</div>
+          <div class="stat-label">Toplam Ciro (₺)</div>
         </div>
       </div>
       
-      <!-- Kademe Bilgisi -->
-      <div id="tierInfo"></div>
-    </div>
-    
-    <!-- Sepet Paneli -->
-    <div class="glass-panel" id="cartPanel" style="display: none;">
-      <div class="panel-header">
-        <i class="fas fa-shopping-cart"></i>
-        <h2>Sepetiniz</h2>
-        <button class="reset-btn" onclick="clearCart()" style="margin-left: auto;">
-          <i class="fas fa-trash"></i> Sepeti Temizle
-        </button>
+      <div id="services-loading" class="loading-indicator" style="display: none;">
+        <div class="spinner"></div>
+        <span>Hizmetler yükleniyor...</span>
       </div>
       
       <div class="table-container">
-        <table class="cart-table">
+        <table class="services-table">
           <thead>
             <tr>
-              <th>Ürün Adı</th>
+              <th>Tarih</th>
+              <th>Cari</th>
+              <th>Ürün</th>
               <th>Miktar</th>
               <th>Birim Fiyat</th>
               <th>Toplam</th>
-              <th>İşlem</th>
+              <th>Durum</th>
+              <th>Notlar</th>
+              <th>İşlemler</th>
             </tr>
           </thead>
-          <tbody id="cartTableBody">
-            <!-- Sepet öğeleri buraya gelecek -->
+          <tbody id="servicesTableBody">
+            <!-- Hizmetler buraya gelecek -->
           </tbody>
         </table>
       </div>
+    </div>
+  </div>
+  
+  <!-- CARİLER SAYFASI -->
+  <div id="customers-page" class="page-content">
+    <div class="glass-panel">
+      <div class="panel-header">
+        <i class="fas fa-users"></i>
+        <h2>Cari Yönetimi</h2>
+        <div class="panel-actions">
+          <button class="action-btn small" onclick="openModal('customerModal')">
+            <i class="fas fa-plus"></i> Yeni Cari
+          </button>
+        </div>
+      </div>
       
-      <div class="results-grid" style="margin-top: 24px;">
-        <div class="result-card total-price">
-          <div class="result-label">
-            <i class="fas fa-receipt"></i> Sepet Toplamı
+      <div id="customers-loading" class="loading-indicator" style="display: none;">
+        <div class="spinner"></div>
+        <span>Cariler yükleniyor...</span>
+      </div>
+      
+      <div class="table-container">
+        <table class="customers-table">
+          <thead>
+            <tr>
+              <th>Cari Adı</th>
+              <th>Telefon</th>
+              <th>E-posta</th>
+              <th>Vergi No</th>
+              <th>Durum</th>
+              <th>Kayıt Tarihi</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody id="customersTableBody">
+            <!-- Cariler buraya gelecek -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- FİYAT HESAPLAMA SAYFASI -->
+  <div id="calculator-page" class="page-content">
+    <div class="glass-panel">
+      <div class="panel-header">
+        <i class="fas fa-search-dollar"></i>
+        <h2>Fiyat Hesapla</h2>
+      </div>
+      
+      <!-- Ürün Seçimi -->
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-box"></i> Ürün Seçimi*</label>
+          <div id="loading-indicator" class="loading-indicator">
+            <div class="spinner"></div>
+            <span>Ürünler yükleniyor...</span>
           </div>
-          <div class="result-value">
-            <span id="cartTotal">0.00</span>
-            <span class="result-unit">₺</span>
+          <div id="product-select-container" style="display: none;">
+            <select id="product" class="glass-input">
+              <option value="">Ürün Seçin</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-hashtag"></i> Miktar*</label>
+          <div class="amount-controls">
+            <div class="amount-input-container">
+              <button class="amount-btn" onclick="decrementAmount()">
+                <i class="fas fa-minus"></i>
+              </button>
+              <input type="number" id="amount" class="glass-input" placeholder="Miktar girin" min="1">
+              <button class="amount-btn" onclick="incrementAmount()">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <button class="reset-btn" onclick="resetAmount()">
+              <i class="fas fa-redo"></i> Sıfırla
+            </button>
+          </div>
+          
+          <!-- Hızlı Ekleme Butonları -->
+          <div class="quick-add-section">
+            <div class="quick-add-title">
+              <i class="fas fa-bolt"></i> Hızlı Miktar Ekle
+            </div>
+            <div class="quick-add-buttons">
+              <button class="quick-add-btn" onclick="quickAdd(10)">
+                <i class="fas fa-plus-circle"></i> 10
+              </button>
+              <button class="quick-add-btn" onclick="quickAdd(50)">
+                <i class="fas fa-plus-circle"></i> 50
+              </button>
+              <button class="quick-add-btn" onclick="quickAdd(100)">
+                <i class="fas fa-plus-circle"></i> 100
+              </button>
+              <button class="quick-add-btn" onclick="quickAdd(500)">
+                <i class="fas fa-plus-circle"></i> 500
+              </button>
+              <button class="quick-add-btn" onclick="quickAdd(1000)">
+                <i class="fas fa-plus-circle"></i> 1000
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    
-    <!-- Kademe Tablosu -->
-    <div class="table-container">
-      <div class="panel-header">
-        <i class="fas fa-list-ol"></i>
-        <h2>Ürün Kademeleri</h2>
+      
+      <!-- Hesaplama Sonuçları -->
+      <div class="glass-panel results-panel">
+        <div class="panel-header">
+          <i class="fas fa-chart-line"></i>
+          <h2>Hesaplama Sonuçları</h2>
+        </div>
+        
+        <div class="results-grid">
+          <div class="result-card unit-price">
+            <div class="result-label">
+              <i class="fas fa-tag"></i> Birim Fiyat
+            </div>
+            <div class="result-value">
+              <span id="unitPrice">-</span>
+              <span class="result-unit">₺ / <span id="unitDisplay">-</span></span>
+            </div>
+          </div>
+          
+          <div class="result-card">
+            <div class="result-label">
+              <i class="fas fa-cube"></i> Miktar
+            </div>
+            <div class="result-value">
+              <span id="amountDisplay">-</span>
+              <span class="result-unit" id="unitDisplay2">-</span>
+            </div>
+          </div>
+          
+          <div class="result-card total-price">
+            <div class="result-label">
+              <i class="fas fa-receipt"></i> Toplam Tutar
+            </div>
+            <div class="result-value">
+              <span id="total">-</span>
+              <span class="result-unit">₺</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Kademe Bilgisi -->
+        <div id="tierInfo"></div>
       </div>
       
-      <table class="tiers-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Miktar Aralığı</th>
-            <th>Birim Fiyat</th>
-            <th>Uygulanan</th>
-          </tr>
-        </thead>
-        <tbody id="tiersTableBody">
-          <tr>
-            <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-secondary);">
-              <i class="fas fa-info-circle"></i> Ürün seçerek kademe bilgilerini görüntüleyin
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- Kademe Tablosu -->
+      <div class="table-container">
+        <div class="panel-header">
+          <i class="fas fa-list-ol"></i>
+          <h2>Ürün Kademeleri</h2>
+        </div>
+        
+        <table class="tiers-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Miktar Aralığı</th>
+              <th>Birim Fiyat</th>
+              <th>Uygulanan</th>
+            </tr>
+          </thead>
+          <tbody id="tiersTableBody">
+            <tr>
+              <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <i class="fas fa-info-circle"></i> Ürün seçerek kademe bilgilerini görüntüleyin
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- CARİ MODAL -->
+  <div id="customerModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="customerFormTitle">Yeni Cari Ekle</h2>
+        <button class="modal-close" onclick="closeModal('customerModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <form id="customerForm" onsubmit="submitCustomerForm(event)">
+        <input type="hidden" id="customerId">
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-user"></i> Cari Adı*</label>
+            <input type="text" id="customerNameInput" class="glass-input" placeholder="Cari adı girin" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-building"></i> Firma Adı</label>
+            <input type="text" id="customerCompany" class="glass-input" placeholder="Firma adı girin">
+          </div>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-phone"></i> Telefon</label>
+            <input type="tel" id="customerPhone" class="glass-input" placeholder="Telefon numarası">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-envelope"></i> E-posta</label>
+            <input type="email" id="customerEmail" class="glass-input" placeholder="E-posta adresi">
+          </div>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-receipt"></i> Vergi No</label>
+            <input type="text" id="customerTaxNumber" class="glass-input" placeholder="Vergi numarası">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-circle"></i> Durum</label>
+            <select id="customerStatus" class="glass-input">
+              <option value="active">Aktif</option>
+              <option value="regular">Düzenli</option>
+              <option value="inactive">Pasif</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-map-marker-alt"></i> Adres</label>
+          <textarea id="customerAddress" class="glass-input" rows="3" placeholder="Adres bilgisi"></textarea>
+        </div>
+        
+        <div class="form-group" style="margin-top: 32px;">
+          <button type="submit" class="action-btn" style="width: 100%;">
+            <i class="fas fa-save"></i> Kaydet
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- HİZMET MODAL -->
+  <div id="serviceModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="serviceFormTitle">Yeni Hizmet Ekle</h2>
+        <button class="modal-close" onclick="closeModal('serviceModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <form id="serviceForm" onsubmit="submitServiceForm(event)">
+        <input type="hidden" id="serviceId">
+        <input type="hidden" id="serviceCustomerId">
+        
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-user"></i> Cari Adı*</label>
+            <input type="text" id="serviceCustomerName" class="glass-input" required readonly>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-building"></i> Şirket</label>
+            <input type="text" id="serviceCustomerCompany" class="glass-input" readonly>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-phone"></i> Telefon</label>
+            <input type="text" id="serviceCustomerPhone" class="glass-input" readonly>
+          </div>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-box"></i> Ürün Seçimi*</label>
+            <select id="serviceProduct" class="glass-input" required>
+              <option value="">Ürün Seçin</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-hashtag"></i> Miktar*</label>
+            <input type="number" id="serviceQuantity" class="glass-input" placeholder="Miktar girin" min="1" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label"><i class="fas fa-sticky-note"></i> Notlar</label>
+          <textarea id="serviceNotes" class="glass-input" rows="3" placeholder="Özel notlarınız..."></textarea>
+        </div>
+        
+        <!-- WhatsApp Önizleme -->
+        <div class="whatsapp-preview">
+          <div class="whatsapp-preview-header">
+            <i class="fab fa-whatsapp"></i>
+            <h3 style="margin: 0; font-size: 16px;">WhatsApp Mesaj Önizlemesi</h3>
+          </div>
+          <div class="whatsapp-preview-content" id="whatsappPreviewContent">
+            Ürün ve miktar seçerek önizlemeyi görüntüleyin.
+          </div>
+        </div>
+        
+        <div class="form-group" style="margin-top: 32px;">
+          <button type="submit" class="action-btn success" style="width: 100%;">
+            <i class="fab fa-whatsapp"></i> WhatsApp'a Gönder ve Kaydet
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- AYARLAR MODAL -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>WhatsApp Ayarları</h2>
+        <button class="modal-close" onclick="closeModal('settingsModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label"><i class="fab fa-whatsapp"></i> WhatsApp Grup Numarası</label>
+        <input type="text" id="whatsappNumberInput" class="glass-input" placeholder="+905551234567" value="+905551234567">
+        <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
+          WhatsApp grubunuzun telefon numarasını girin. Örnek: +905551234567
+        </p>
+      </div>
+      
+      <div class="form-group" style="margin-top: 32px;">
+        <button type="button" class="action-btn success" onclick="updateWhatsAppNumber()" style="width: 100%;">
+          <i class="fas fa-save"></i> Kaydet
+        </button>
+      </div>
     </div>
   </div>
   
@@ -1618,15 +2941,14 @@ window.resetAmount = function() {
   <div class="footer">
     <div class="footer-info">
       <i class="fas fa-info-circle"></i>
-      <span>* ile işaretli alanlar zorunludur</span>
+      <span>Tüm hizmetler WhatsApp'a otomatik gönderilir</span>
     </div>
-    <div>© 2026 Can Ahmet Tosun | Büro Copy Fiyat Hesaplama</div>
+    <div>© 2026 Can Ahmet Tosun | Büro Copy Entegre Sistem</div>
     <div class="footer-info">
-      <i class="fas fa-bolt"></i>
-      <span>Gerçek zamanlı hesaplama</span>
+      <i class="fab fa-whatsapp"></i>
+      <span>Gerçek zamanlı bildirim sistemi</span>
     </div>
   </div>
 </div>
-
 </body>
 </html>
