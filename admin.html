@@ -1073,12 +1073,15 @@ select.glass-input {
   margin-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 768px) {
   .tabs {
     flex-direction: row;
     gap: 8px;
+    overflow-x: visible;
   }
 }
 
@@ -1096,7 +1099,8 @@ select.glass-input {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 100%;
+  min-width: max-content;
+  white-space: nowrap;
 }
 
 @media (min-width: 768px) {
@@ -1229,6 +1233,269 @@ input[type="number"] {
     margin-bottom: 0;
   }
 }
+
+/* Cari Hesap Tabloları */
+.cari-table-container {
+  overflow-x: auto;
+  margin-top: 20px;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+  .cari-table-container {
+    margin-top: 24px;
+  }
+}
+
+.cari-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.cari-table th {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 14px;
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .cari-table th {
+    padding: 16px;
+    font-size: 13px;
+  }
+}
+
+.cari-table td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .cari-table td {
+    padding: 16px;
+  }
+}
+
+.cari-table tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Filtre Bileşenleri */
+.filter-container {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .filter-container {
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .filter-grid {
+    grid-template-columns: 1fr 1fr auto;
+    gap: 16px;
+    align-items: end;
+  }
+}
+
+.filter-btn {
+  padding: 12px 16px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 10px;
+  color: var(--secondary);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .filter-btn {
+    width: auto;
+    padding: 14px 20px;
+  }
+}
+
+.filter-btn:hover {
+  background: rgba(16, 185, 129, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Özet Kartları */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+  .summary-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+}
+
+.summary-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .summary-card {
+    padding: 20px;
+  }
+}
+
+.summary-card h4 {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.summary-card p {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@media (min-width: 768px) {
+  .summary-card p {
+    font-size: 24px;
+  }
+}
+
+.summary-card.total .summary-value {
+  color: var(--secondary);
+}
+
+.summary-card.today .summary-value {
+  color: var(--accent);
+}
+
+.summary-card.customers .summary-value {
+  color: var(--primary);
+}
+
+.summary-card.average .summary-value {
+  color: #8b5cf6;
+}
+
+/* Aylık Özet Tablosu */
+.monthly-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.monthly-summary-table th {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 14px;
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .monthly-summary-table th {
+    padding: 16px;
+    font-size: 13px;
+  }
+}
+
+.monthly-summary-table td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .monthly-summary-table td {
+    padding: 16px;
+  }
+}
+
+.monthly-summary-table tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.monthly-summary-table .customer-name {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.monthly-summary-table .month {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.monthly-summary-table .total-amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+/* Boş Durum Stilleri */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.empty-state p {
+  font-size: 14px;
+  max-width: 400px;
+  margin: 0 auto;
+}
 </style>
 
 <!-- 🔐 ŞİFRE KORUMASI -->
@@ -1263,6 +1530,7 @@ window.login = function() {
     showNotification("Başarıyla giriş yapıldı!", "success");
     addTier();
     loadProducts();
+    loadCariTransactions();
   } else {
     errorElement.textContent = "Hatalı şifre! Lütfen tekrar deneyin.";
     errorElement.style.display = 'block';
@@ -1323,6 +1591,11 @@ function switchTab(tabName) {
   
   // Aktif tab içeriğini göster
   document.getElementById(tabName).classList.add('active');
+  
+  // Cari hesap tabına geçildiğinde verileri yenile
+  if (tabName === 'cari-account') {
+    loadCariTransactions();
+  }
 }
 </script>
 
@@ -1337,7 +1610,9 @@ import {
   deleteDoc,
   query,
   orderBy,
-  getDoc
+  where,
+  getDoc,
+  Timestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 /* 🔥 FIREBASE CONFIG */
@@ -1368,6 +1643,7 @@ try {
 
 let currentEditId = null;
 let productsList = [];
+let cariTransactions = [];
 
 // Firebase'den ürünleri yükle
 async function loadProducts() {
@@ -1507,6 +1783,422 @@ async function loadProducts() {
     loadingIndicator.style.display = "none";
   }
 }
+
+// CARİ HESAP İŞLEMLERİ
+async function loadCariTransactions() {
+  if (sessionStorage.getItem("adminAuth") !== "true") {
+    console.log("⛔ Kullanıcı giriş yapmamış");
+    return;
+  }
+  
+  const loadingIndicator = document.getElementById("cari-loading");
+  const cariTableBody = document.getElementById("cari-table-body");
+  const cariSummaryCards = document.getElementById("cari-summary-cards");
+  
+  try {
+    console.log("🔄 Cari hesap işlemleri yükleniyor...");
+    
+    if (loadingIndicator) loadingIndicator.style.display = "flex";
+    
+    // Firestore bağlantısını kontrol et
+    if (!db) {
+      throw new Error("Firestore bağlantısı yok!");
+    }
+    
+    // Koleksiyon referansı
+    const cariRef = collection(db, "cari_hesap");
+    
+    // Sorgu oluştur (tarihe göre sırala)
+    const q = query(cariRef, orderBy("timestamp", "desc"));
+    
+    // Verileri al
+    const querySnapshot = await getDocs(q);
+    console.log(`📊 ${querySnapshot.size} cari işlem bulundu`);
+    
+    cariTransactions = [];
+    cariTableBody.innerHTML = "";
+    
+    if (querySnapshot.empty) {
+      console.log("ℹ️ Henüz cari hesap işlemi yok");
+      cariTableBody.innerHTML = `
+        <tr>
+          <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+            <i class="fas fa-info-circle"></i> Henüz cari hesap işlemi bulunmuyor.
+          </td>
+        </tr>
+      `;
+      
+      // Özet kartlarını temizle
+      if (cariSummaryCards) {
+        cariSummaryCards.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-book"></i>
+            <h3>Henüz Cari İşlem Yok</h3>
+            <p>Cari hesap işlemleri burada görüntülenecektir.</p>
+          </div>
+        `;
+      }
+    } else {
+      let totalAmount = 0;
+      let todayAmount = 0;
+      const uniqueCustomers = new Set();
+      const today = new Date().toISOString().split('T')[0];
+      const monthlyData = {};
+      
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const transaction = {
+          id: doc.id,
+          ...data
+        };
+        cariTransactions.push(transaction);
+        
+        // Timestamp'i tarih formatına çevir
+        let transactionDate, transactionTime;
+        if (data.timestamp && data.timestamp.toDate) {
+          const dateObj = data.timestamp.toDate();
+          transactionDate = dateObj.toISOString().split('T')[0];
+          transactionTime = dateObj.toLocaleTimeString('tr-TR', { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          });
+        } else if (data.date) {
+          transactionDate = data.date;
+          transactionTime = data.time || '-';
+        } else {
+          transactionDate = '-';
+          transactionTime = '-';
+        }
+        
+        // Müşteri adını kaydet
+        if (data.customerName) {
+          uniqueCustomers.add(data.customerName);
+        }
+        
+        // Toplam tutarı hesapla
+        const transactionAmount = data.totalPrice || 0;
+        totalAmount += transactionAmount;
+        
+        // Bugünkü tutarı hesapla
+        if (transactionDate === today) {
+          todayAmount += transactionAmount;
+        }
+        
+        // Aylık verileri topla
+        if (transactionDate && transactionDate !== '-') {
+          const [year, month] = transactionDate.split('-').slice(0, 2);
+          const monthKey = `${year}-${month}`;
+          const customerName = data.customerName || 'Bilinmeyen Müşteri';
+          const customerMonthKey = `${customerName}_${monthKey}`;
+          
+          if (!monthlyData[customerMonthKey]) {
+            monthlyData[customerMonthKey] = {
+              customerName: customerName,
+              month: monthKey,
+              total: 0,
+              count: 0
+            };
+          }
+          monthlyData[customerMonthKey].total += transactionAmount;
+          monthlyData[customerMonthKey].count++;
+        }
+        
+        // Tabloya ekle
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${transactionDate}</td>
+          <td>${transactionTime}</td>
+          <td><strong>${data.customerName || '-'}</strong></td>
+          <td>${data.productName || '-'}</td>
+          <td>${data.quantity || 0} ${data.unit || ''}</td>
+          <td>${data.unitPrice ? data.unitPrice.toFixed(2) : '0.00'} ₺</td>
+          <td><strong>${data.totalPrice ? data.totalPrice.toFixed(2) : '0.00'} ₺</strong></td>
+          <td>
+            <button class="action-btn action-btn-sm btn-delete" onclick="deleteCariTransaction('${doc.id}')">
+              <i class="fas fa-trash"></i> Sil
+            </button>
+          </td>
+        `;
+        cariTableBody.appendChild(row);
+      });
+      
+      // Özet kartlarını güncelle
+      if (cariSummaryCards) {
+        const avgTransaction = cariTransactions.length > 0 ? totalAmount / cariTransactions.length : 0;
+        
+        cariSummaryCards.innerHTML = `
+          <div class="summary-card total">
+            <h4>Toplam Cari</h4>
+            <p class="summary-value">${totalAmount.toFixed(2)} ₺</p>
+            <small>${cariTransactions.length} işlem</small>
+          </div>
+          <div class="summary-card today">
+            <h4>Bugünkü Cari</h4>
+            <p class="summary-value">${todayAmount.toFixed(2)} ₺</p>
+            <small>Bugünkü toplam</small>
+          </div>
+          <div class="summary-card customers">
+            <h4>Müşteri Sayısı</h4>
+            <p class="summary-value">${uniqueCustomers.size}</p>
+            <small>Toplam müşteri</small>
+          </div>
+          <div class="summary-card average">
+            <h4>Ort. İşlem</h4>
+            <p class="summary-value">${avgTransaction.toFixed(2)} ₺</p>
+            <small>Ortalama işlem</small>
+          </div>
+        `;
+      }
+      
+      // Aylık özet tablosunu güncelle
+      updateMonthlySummaryTable(monthlyData);
+    }
+    
+    console.log("✅ Cari hesap işlemleri başarıyla yüklendi");
+    if (loadingIndicator) loadingIndicator.style.display = "none";
+    
+  } catch (error) {
+    console.error("❌ Cari hesap yükleme hatası:", error);
+    console.error("Hata detayı:", error.message);
+    
+    if (cariTableBody) {
+      cariTableBody.innerHTML = `
+        <tr>
+          <td colspan="8" style="text-align: center; padding: 40px; color: var(--danger);">
+            <i class="fas fa-exclamation-triangle"></i> Hata: ${error.message}<br>
+            <small>Lütfen Firebase konsolunu kontrol edin.</small>
+          </td>
+        </tr>
+      `;
+    }
+    
+    showNotification(`Cari işlemler yüklenirken hata: ${error.message}`, "error");
+    if (loadingIndicator) loadingIndicator.style.display = "none";
+  }
+}
+
+// Aylık özet tablosunu güncelle
+function updateMonthlySummaryTable(monthlyData) {
+  const monthlyTableBody = document.getElementById("monthly-table-body");
+  
+  if (!monthlyTableBody) return;
+  
+  // Verileri diziye çevir ve sırala
+  const monthlyArray = Object.values(monthlyData);
+  monthlyArray.sort((a, b) => {
+    // Önce müşteri adına göre, sonra aya göre sırala
+    if (a.customerName === b.customerName) {
+      return b.month.localeCompare(a.month);
+    }
+    return a.customerName.localeCompare(b.customerName);
+  });
+  
+  monthlyTableBody.innerHTML = "";
+  
+  if (monthlyArray.length === 0) {
+    monthlyTableBody.innerHTML = `
+      <tr>
+        <td colspan="4" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+          <i class="fas fa-info-circle"></i> Henüz aylık veri bulunmuyor.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+  
+  monthlyArray.forEach(item => {
+    // Ay adını formatla (örn: 2024-01 → Ocak 2024)
+    const [year, month] = item.month.split('-');
+    const monthNames = [
+      'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+      'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+    ];
+    const monthName = monthNames[parseInt(month) - 1];
+    const formattedMonth = `${monthName} ${year}`;
+    
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td class="customer-name">${item.customerName}</td>
+      <td class="month">${formattedMonth}</td>
+      <td>${item.count} işlem</td>
+      <td class="total-amount">${item.total.toFixed(2)} ₺</td>
+    `;
+    monthlyTableBody.appendChild(row);
+  });
+}
+
+// Cari işlem sil
+async function deleteCariTransaction(transactionId) {
+  if (sessionStorage.getItem("adminAuth") !== "true") {
+    showNotification("Önce giriş yapmalısınız!", "error");
+    return;
+  }
+  
+  if (!confirm("Bu cari işlemi silmek istediğinize emin misiniz? Bu işlem geri alınamaz!")) {
+    return;
+  }
+  
+  try {
+    await deleteDoc(doc(db, "cari_hesap", transactionId));
+    showNotification("Cari işlem başarıyla silindi!", "success");
+    // Listeyi yenile
+    loadCariTransactions();
+  } catch (error) {
+    console.error("❌ Cari işlem silme hatası:", error);
+    showNotification("Cari işlem silinirken bir hata oluştu!", "error");
+  }
+}
+
+// Filtreleme işlevleri
+window.filterToday = function() {
+  const today = new Date().toISOString().split('T')[0];
+  filterByDate(today);
+};
+
+window.filterThisMonth = function() {
+  const today = new Date();
+  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+  
+  // Tüm işlemleri yükle, sonra filtrele
+  loadCariTransactions().then(() => {
+    const filtered = cariTransactions.filter(transaction => {
+      let transactionDate;
+      if (transaction.timestamp && transaction.timestamp.toDate) {
+        transactionDate = transaction.timestamp.toDate().toISOString().split('T')[0];
+      } else if (transaction.date) {
+        transactionDate = transaction.date;
+      } else {
+        return false;
+      }
+      
+      return transactionDate >= firstDay && transactionDate <= lastDay;
+    });
+    
+    displayFilteredTransactions(filtered, `Bu Ay (${firstDay} - ${lastDay})`);
+  });
+};
+
+window.filterLastMonth = function() {
+  const today = new Date();
+  const firstDay = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().split('T')[0];
+  const lastDay = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0];
+  
+  loadCariTransactions().then(() => {
+    const filtered = cariTransactions.filter(transaction => {
+      let transactionDate;
+      if (transaction.timestamp && transaction.timestamp.toDate) {
+        transactionDate = transaction.timestamp.toDate().toISOString().split('T')[0];
+      } else if (transaction.date) {
+        transactionDate = transaction.date;
+      } else {
+        return false;
+      }
+      
+      return transactionDate >= firstDay && transactionDate <= lastDay;
+    });
+    
+    displayFilteredTransactions(filtered, `Geçen Ay (${firstDay} - ${lastDay})`);
+  });
+};
+
+function filterByDate(date) {
+  loadCariTransactions().then(() => {
+    const filtered = cariTransactions.filter(transaction => {
+      let transactionDate;
+      if (transaction.timestamp && transaction.timestamp.toDate) {
+        transactionDate = transaction.timestamp.toDate().toISOString().split('T')[0];
+      } else if (transaction.date) {
+        transactionDate = transaction.date;
+      } else {
+        return false;
+      }
+      
+      return transactionDate === date;
+    });
+    
+    displayFilteredTransactions(filtered, `Tarih: ${date}`);
+  });
+}
+
+function displayFilteredTransactions(transactions, filterInfo) {
+  const cariTableBody = document.getElementById("cari-table-body");
+  const filterInfoElement = document.getElementById("filter-info");
+  
+  if (!cariTableBody || !filterInfoElement) return;
+  
+  cariTableBody.innerHTML = "";
+  
+  if (transactions.length === 0) {
+    cariTableBody.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+          <i class="fas fa-info-circle"></i> Filtrelenmiş işlem bulunmuyor.
+        </td>
+      </tr>
+    `;
+  } else {
+    let totalAmount = 0;
+    
+    transactions.forEach(transaction => {
+      let transactionDate, transactionTime;
+      if (transaction.timestamp && transaction.timestamp.toDate) {
+        const dateObj = transaction.timestamp.toDate();
+        transactionDate = dateObj.toISOString().split('T')[0];
+        transactionTime = dateObj.toLocaleTimeString('tr-TR', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+      } else if (transaction.date) {
+        transactionDate = transaction.date;
+        transactionTime = transaction.time || '-';
+      } else {
+        transactionDate = '-';
+        transactionTime = '-';
+      }
+      
+      totalAmount += transaction.totalPrice || 0;
+      
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${transactionDate}</td>
+        <td>${transactionTime}</td>
+        <td><strong>${transaction.customerName || '-'}</strong></td>
+        <td>${transaction.productName || '-'}</td>
+        <td>${transaction.quantity || 0} ${transaction.unit || ''}</td>
+        <td>${transaction.unitPrice ? transaction.unitPrice.toFixed(2) : '0.00'} ₺</td>
+        <td><strong>${transaction.totalPrice ? transaction.totalPrice.toFixed(2) : '0.00'} ₺</strong></td>
+        <td>
+          <button class="action-btn action-btn-sm btn-delete" onclick="deleteCariTransaction('${transaction.id}')">
+            <i class="fas fa-trash"></i> Sil
+          </button>
+        </td>
+      `;
+      cariTableBody.appendChild(row);
+    });
+    
+    // Filtre bilgisini göster
+    filterInfoElement.innerHTML = `
+      <div style="background: rgba(124, 58, 237, 0.1); border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <i class="fas fa-filter"></i> <strong>${filterInfo}</strong> - 
+          ${transactions.length} işlem, Toplam: ${totalAmount.toFixed(2)} ₺
+        </div>
+        <button class="action-btn action-btn-sm btn-secondary" onclick="clearFilter()">
+          <i class="fas fa-times"></i> Filtreyi Temizle
+        </button>
+      </div>
+    `;
+  }
+}
+
+window.clearFilter = function() {
+  loadCariTransactions();
+  const filterInfoElement = document.getElementById("filter-info");
+  if (filterInfoElement) {
+    filterInfoElement.innerHTML = "";
+  }
+};
 
 // Düzenleme işlemini yönet
 window.handleEditProduct = function(code, safeName, unit, encodedTiers) {
@@ -1786,8 +2478,9 @@ window.testFirebase = async function() {
     
     showNotification("Firebase bağlantısı başarılı!", "success");
     
-    // Listeyi yenile
+    // Listeleri yenile
     loadProducts();
+    loadCariTransactions();
     
   } catch (error) {
     console.error("❌ Firebase test hatası:", error);
@@ -1807,6 +2500,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
       if (db) {
         loadProducts();
+        loadCariTransactions();
       } else {
         console.error("❌ Firebase bağlantısı yok!");
       }
@@ -1854,8 +2548,8 @@ document.addEventListener('DOMContentLoaded', function() {
   <!-- Header -->
   <div class="admin-header">
     <div class="header-left">
-      <h1>Ürün Yönetim Paneli</h1>
-      <p>Ürün ve fiyat kademelerini yönetin</p>
+      <h1>Yönetim Paneli</h1>
+      <p>Ürün, fiyat ve cari hesap yönetimi</p>
     </div>
     <div class="header-right">
       <div class="user-badge">
@@ -1882,6 +2576,9 @@ document.addEventListener('DOMContentLoaded', function() {
     </button>
     <button class="tab-btn" data-tab="product-list" onclick="switchTab('product-list')">
       <i class="fas fa-list"></i> Ürün Listesi
+    </button>
+    <button class="tab-btn" data-tab="cari-account" onclick="switchTab('cari-account')">
+      <i class="fas fa-book"></i> Cari Hesap
     </button>
     <button class="tab-btn" data-tab="stats" onclick="switchTab('stats')">
       <i class="fas fa-chart-bar"></i> İstatistikler
@@ -1979,6 +2676,108 @@ document.addEventListener('DOMContentLoaded', function() {
           <i class="fas fa-plus"></i> Yeni Ürün Ekle
         </button>
         <button class="btn btn-secondary" onclick="loadProducts()">
+          <i class="fas fa-sync"></i> Listeyi Yenile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cari Hesap Tab -->
+  <div id="cari-account" class="tab-content">
+    <div class="glass-panel">
+      <div class="panel-header">
+        <i class="fas fa-book"></i>
+        <h2>Cari Hesap İşlemleri</h2>
+      </div>
+      
+      <!-- Filtre Bileşenleri -->
+      <div class="filter-container">
+        <div class="filter-grid">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-calendar"></i> Tarih</label>
+            <input type="date" id="filter-date" class="glass-input" onchange="filterByDate(this.value)">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-filter"></i> Hızlı Filtreler</label>
+            <div style="display: flex; gap: 8px;">
+              <button class="filter-btn" onclick="filterToday()">
+                <i class="fas fa-sun"></i> Bugün
+              </button>
+              <button class="filter-btn" onclick="filterThisMonth()">
+                <i class="fas fa-calendar-week"></i> Bu Ay
+              </button>
+              <button class="filter-btn" onclick="filterLastMonth()">
+                <i class="fas fa-calendar-alt"></i> Geçen Ay
+              </button>
+            </div>
+          </div>
+          
+          <button class="btn btn-secondary" onclick="clearFilter()">
+            <i class="fas fa-sync"></i> Tümünü Göster
+          </button>
+        </div>
+        
+        <!-- Filtre Bilgisi -->
+        <div id="filter-info" style="margin-top: 12px;"></div>
+      </div>
+      
+      <!-- Özet Kartları -->
+      <div id="cari-summary-cards" class="summary-grid"></div>
+      
+      <!-- Yükleme Göstergesi -->
+      <div id="cari-loading" class="loading-indicator" style="display: none;">
+        <div class="spinner"></div>
+        <span>Cari işlemler yükleniyor...</span>
+      </div>
+      
+      <!-- Cari İşlemler Tablosu -->
+      <div class="cari-table-container">
+        <table class="cari-table">
+          <thead>
+            <tr>
+              <th>Tarih</th>
+              <th>Saat</th>
+              <th>Müşteri</th>
+              <th>Ürün</th>
+              <th>Miktar</th>
+              <th>Birim Fiyat</th>
+              <th>Toplam</th>
+              <th>İşlem</th>
+            </tr>
+          </thead>
+          <tbody id="cari-table-body">
+            <!-- Cari işlemler buraya eklenecek -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Aylık Özet Tablosu -->
+      <div style="margin-top: 32px;">
+        <div class="panel-header">
+          <i class="fas fa-chart-pie"></i>
+          <h2>Müşteri Bazlı Aylık Özet</h2>
+        </div>
+        
+        <div class="cari-table-container">
+          <table class="monthly-summary-table">
+            <thead>
+              <tr>
+                <th>Müşteri</th>
+                <th>Ay</th>
+                <th>İşlem Sayısı</th>
+                <th>Toplam Tutar</th>
+              </tr>
+            </thead>
+            <tbody id="monthly-table-body">
+              <!-- Aylık özet buraya eklenecek -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="action-buttons" style="margin-top: 24px;">
+        <button class="btn btn-secondary" onclick="loadCariTransactions()">
           <i class="fas fa-sync"></i> Listeyi Yenile
         </button>
       </div>
